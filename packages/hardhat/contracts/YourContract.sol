@@ -10,16 +10,22 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // Todo: Reminders - Regenerate ABI and set in React App folder every time you add functions
 // Todo: 1. Add Requires for protection
 // Todo: 2. Check on Mapping structures to see if we're actually tracking sales right
+// Todo: 3. Make it work in the App
+// Todo: Get YourCollectibles Working in the Scaffold Rendering
+// 
+
 
 contract BasicSale {
 
-  event SaleInit(address seller, address buyer, uint price, address NFTContract, uint TokenID);
+  event SaleInit(uint index, address seller, address buyer, uint price, address NFTContract, uint TokenID);
   event BuyInit();
   event NFTSwapped();
   event SaleComplete();
-
   address private owner;
+  uint public index;
+
   struct Sale {
+    address seller;
     address buyer;
     uint price; // In gwei
     uint saleInitTime;
@@ -30,7 +36,8 @@ contract BasicSale {
     bool offerAccepted;
     bool offerRejected;
   }
-  mapping (uint => mapping (address => Sale)) sales;
+  mapping (uint => Sale) sales;
+  mapping (address => uint) balances;
 
   constructor() payable {
     owner = payable(address(0x3AFA32FDbbe2eF9118Cdf020ae972880C00Fd61E));
@@ -38,8 +45,8 @@ contract BasicSale {
 
   
   function saleInit(address _buyer, uint _price, address _nftContract, uint _tokenId) public {
-      
       Sale memory thisSale = Sale({
+        seller: msg.sender,
         buyer:_buyer,
         price: _price * 10^18, // In gwei
         saleInitTime: block.timestamp,
@@ -50,21 +57,39 @@ contract BasicSale {
         offerAccepted: false,
         offerRejected: false
       });
-      emit SaleInit(msg.sender, thisSale.buyer, thisSale.price, thisSale.nftContract, thisSale.tokenId);
-      console.log(msg.sender,"initiated sale",thisSale.buyer);
+      sales[index] = thisSale;
+      emit SaleInit(index, msg.sender, thisSale.buyer, thisSale.price, thisSale.nftContract, thisSale.tokenId);
+      index += 1;
+      console.log(msg.sender,"initiated sale", thisSale.buyer);
   }
 
   // Approval for transfer needs to happen with JS so this contract can move
   // NFT When buyer submits ETH to Pool.
 
+  function buyInit(uint _index) public payable {
+    require(IERC721(sales[index].nftContract).getApproved(sales[index].tokenId)==address(this),"Not Approved");
+    require(!sales[index].offerAccepted, "Already Accepted");
+    require(!sales[index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
+    require(block.timestamp<sales[index].saleExpiration,"Time Expired");
+    require(!sales[index].offerRejected, "Offer Rejected");
+    require(sales[index].buyer==msg.sender,"Not authorized buyer");
+    require(msg.value==sales[index].price,"Not enough ETH");
+    sales[index].offerAccepted = true;
 
-// // Todo: Turn into native function
-// function moveNFT(address _nftContract, uint tokenId) public {
-//     IERC721(_nftContract).transferFrom(msg.sender, testTarget, tokenId);
-//   }
+    balances[sales[index].seller] += msg.value;
+    IERC721(sales[index].nftContract).transferFrom(sales[index].seller, sales[index].buyer, sales[index].tokenId);
+  }
+
+  function reject(uint _index) public {
+    require(sales[index].buyer==msg.sender,"Not authorized buyer");
+    require(!sales[index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
+    require(block.timestamp<sales[index].saleExpiration,"Time Expired");
+  }
 
 
-  // to support receiving ETH by default
-  receive() external payable {}
-  fallback() external payable {}
+  receive() external payable {
+
+  }
+
 }
+  
