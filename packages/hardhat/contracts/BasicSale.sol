@@ -10,10 +10,10 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // Todo: Reminders - Regenerate ABI and set in React App folder every time you add functions
 // Todo: 1. Add Requires for protection
 // Todo: 2. Check on Mapping structures to see if we're actually tracking sales right
-// Todo: 3. Make it work in the App
-// Todo: Get YourCollectibles Working in the Scaffold Rendering
+// Todo: 3. Make it work in the App (make new ABI)
+// Todo: 4. Get YourCollectibles Working in the Scaffold Rendering
+// Todo: Manually check to see if it works when you approve manually (Do it JS later)
 // 
-
 
 contract BasicSale {
 
