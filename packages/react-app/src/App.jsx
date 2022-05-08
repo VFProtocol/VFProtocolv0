@@ -619,6 +619,7 @@ const result = tx(
         </Route>
         {/* Begin NFT Pages */}
         <Route exact path="/nft">
+        
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <Button
                 disabled={minting}
