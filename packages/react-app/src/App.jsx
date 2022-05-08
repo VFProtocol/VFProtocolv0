@@ -1,4 +1,4 @@
-import { Button, Col, Menu, Row } from "antd";
+import { Button, Card, Col, List, Menu, Row } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -9,11 +9,14 @@ import {
   useUserProviderAndSigner,
 } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
+import { useEventListener } from "eth-hooks/events/";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Account,
+  Address,
+  AddressInput,
   Contract,
   Faucet,
   GasGauge,
@@ -31,6 +34,12 @@ import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, ExampleUI, Hints, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
+
+
+
+const { BufferList } = require("bl");
+const ipfsAPI = require("ipfs-http-client");
+const ipfs = ipfsAPI({ host: "ipfs.infura.io", port: "5001", protocol: "https" });
 
 const { ethers } = require("ethers");
 /*
@@ -62,6 +71,42 @@ const USE_BURNER_WALLET = true; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
+
+// START NFT STUFF
+// EXAMPLE STARTING JSON:
+const STARTING_JSON = {
+  description: "It's actually a bison?",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/buffalo.jpg",
+  name: "Buffalo",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "green",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+  ],
+};
+
+// helper function to "Get" from IPFS
+// you usually go content.toString() after this...
+const getFromIPFS = async hashToGet => {
+  for await (const file of ipfs.get(hashToGet)) {
+    console.log(file.path);
+    if (!file.content) continue;
+    const content = new BufferList();
+    for await (const chunk of file.content) {
+      content.append(chunk);
+    }
+    console.log(content);
+    return content;
+  }
+};
+
+// END NFT STUFF
 
 // 🛰 providers
 const providers = [
@@ -244,6 +289,262 @@ function App(props) {
 
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
 
+  
+// START YOUR COLLECTIBLES STUFF
+const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
+console.log("🤗 balance:", balance);
+
+// 📟 Listen for broadcast events
+const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
+console.log("📟 Transfer events:", transferEvents);
+
+//
+// 🧠 This effect will update yourCollectibles by polling when your balance changes
+//
+const yourBalance = balance && balance.toNumber && balance.toNumber();
+const [yourJSON, setYourJSON] = useState(STARTING_JSON);
+const [sending, setSending] = useState();
+const [ipfsHash, setIpfsHash] = useState();
+const [ipfsDownHash, setIpfsDownHash] = useState();
+const [downloading, setDownloading] = useState();
+const [ipfsContent, setIpfsContent] = useState();
+const [yourCollectibles, setYourCollectibles] = useState();
+const [minting, setMinting] = useState(false);
+const [approving, setApproving] = useState(false);
+const [moving, setMoving] = useState(false);
+const [count, setCount] = useState(1);
+const [transferToAddresses, setTransferToAddresses] = useState({});
+
+
+
+useEffect(() => {
+  const updateYourCollectibles = async () => {
+    const collectibleUpdate = [];
+    for (let tokenIndex = 0; tokenIndex < balance; tokenIndex++) {
+      try {
+        console.log("GEtting token index", tokenIndex);
+        const tokenId = await readContracts.YourCollectible.tokenOfOwnerByIndex(address, tokenIndex);
+        console.log("tokenId", tokenId);
+        const tokenURI = await readContracts.YourCollectible.tokenURI(tokenId);
+        console.log("tokenURI", tokenURI);
+
+        const ipfsHash = tokenURI.replace("https://ipfs.io/ipfs/", "");
+        console.log("ipfsHash", ipfsHash);
+
+        const jsonManifestBuffer = await getFromIPFS(ipfsHash);
+
+        try {
+          const jsonManifest = JSON.parse(jsonManifestBuffer.toString());
+          console.log("jsonManifest", jsonManifest);
+          collectibleUpdate.push({ id: tokenId, uri: tokenURI, owner: address, ...jsonManifest });
+        } catch (e) {
+          console.log(e);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    setYourCollectibles(collectibleUpdate);
+  };
+  updateYourCollectibles();
+}, [address, yourBalance]);
+
+// the json for the nfts
+const json = {
+1: {
+  description: "It's actually a bison?",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/buffalo.jpg",
+  name: "Buffalo",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "green",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+    {
+      trait_type: "Stamina",
+      value: 42,
+    },
+  ],
+},
+2: {
+  description: "What is it so worried about?",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/zebra.jpg",
+  name: "Zebra",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "blue",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+    {
+      trait_type: "Stamina",
+      value: 38,
+    },
+  ],
+},
+3: {
+  description: "What a horn!",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/rhino.jpg",
+  name: "Rhino",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "pink",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+    {
+      trait_type: "Stamina",
+      value: 22,
+    },
+  ],
+},
+4: {
+  description: "Is that an underbyte?",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/fish.jpg",
+  name: "Fish",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "blue",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+    {
+      trait_type: "Stamina",
+      value: 15,
+    },
+  ],
+},
+5: {
+  description: "So delicate.",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/flamingo.jpg",
+  name: "Flamingo",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "black",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+    {
+      trait_type: "Stamina",
+      value: 6,
+    },
+  ],
+},
+6: {
+  description: "Raaaar!",
+  external_url: "https://austingriffith.com/portfolio/paintings/", // <-- this can link to a page for the specific file too
+  image: "https://austingriffith.com/images/paintings/godzilla.jpg",
+  name: "Godzilla",
+  attributes: [
+    {
+      trait_type: "BackgroundColor",
+      value: "orange",
+    },
+    {
+      trait_type: "Eyes",
+      value: "googly",
+    },
+    {
+      trait_type: "Stamina",
+      value: 99,
+    },
+  ],
+},
+};
+
+const mintItem = async () => {
+// upload to ipfs
+const uploaded = await ipfs.add(JSON.stringify(json[count]));
+setCount(count + 1);
+console.log("Uploaded Hash: ", uploaded);
+const result = tx(
+  writeContracts &&
+    writeContracts.YourCollectible &&
+    writeContracts.YourCollectible.mintItem(address, uploaded.path),
+  update => {
+    console.log("📡 Transaction Update:", update);
+    if (update && (update.status === "confirmed" || update.status === 1)) {
+      console.log(" 🍾 Transaction " + update.hash + " finished!");
+      console.log(
+        " ⛽️ " +
+          update.gasUsed +
+          "/" +
+          (update.gasLimit || update.gas) +
+          " @ " +
+          parseFloat(update.gasPrice) / 1000000000 +
+          " gwei",
+      );
+    }
+  },
+);
+};
+
+
+const approve = async () => {
+// upload to ipfs
+const approvedAddress = "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be" 
+const result = tx(
+  writeContracts &&
+    writeContracts.YourCollectible &&
+    writeContracts.YourCollectible.approve(approvedAddress, 1),
+  update => {
+    console.log("📡 Transaction Update:", update);
+    if (update && (update.status === "confirmed" || update.status === 1)) {
+      console.log(" 🍾 Transaction " + update.hash + " finished!");
+      console.log(
+        " ⛽️ " +
+          update.gasUsed +
+          "/" +
+          (update.gasLimit || update.gas) +
+          " @ " +
+          parseFloat(update.gasPrice) / 1000000000 +
+          " gwei",
+      );
+    }
+  },
+);
+};
+
+const moveNFT = async () => {
+const tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+
+const result = tx(
+  writeContracts &&
+    writeContracts.MultiSigWallet &&
+    writeContracts.MultiSigWallet.moveNFT(tokenAddress, 1),
+  update => {
+    console.log("📡 Transaction Update:", update);
+  },
+);
+};
+
+// END YOUR NFT COLLECTIBLES STUFF (until the actual app)
+
+
+
+
+
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
@@ -263,6 +564,14 @@ function App(props) {
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>
+        {/* NFT PAGES */}
+        <Menu.Item key="/nft">
+          <Link to="/nft">NFT Panel</Link>
+        </Menu.Item>
+        <Menu.Item key="/transfers">
+          <Link to="/transfers">Transfers</Link>
+        </Menu.Item>
+        {/* End NFT Pages */}
         <Menu.Item key="/hints">
           <Link to="/hints">Hints</Link>
         </Menu.Item>
@@ -298,7 +607,126 @@ function App(props) {
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
           />
+          <Contract
+            name={"YourCollectible"}
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
         </Route>
+        {/* Begin NFT Pages */}
+        <Route exact path="/nft">
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <Button
+                disabled={minting}
+                shape="round"
+                size="large"
+                onClick={() => {
+                  mintItem();
+                }}
+              >
+                MINT NFT
+              </Button>
+            </div>
+            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <Button
+                disabled={approving}
+                shape="round"
+                size="large"
+                onClick={() => {
+                  approve();
+                }}
+              >
+                Approve Contract
+              </Button>
+            </div>
+            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <Button
+                disabled={moving}
+                shape="round"
+                size="large"
+                onClick={() => {
+                  moveNFT();
+                }}
+              >
+                Move NFT
+              </Button>
+            </div>
+            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <List
+                bordered
+                dataSource={yourCollectibles}
+                renderItem={item => {
+                  const id = item.id.toNumber();
+                  return (
+                    <List.Item key={id + "_" + item.uri + "_" + item.owner}>
+                      <Card
+                        title={
+                          <div>
+                            <span style={{ fontSize: 16, marginRight: 8 }}>#{id}</span> {item.name}
+                          </div>
+                        }
+                      >
+                        <div>
+                          <img src={item.image} style={{ maxWidth: 150 }} />
+                        </div>
+                        <div>{item.description}</div>
+                      </Card>
+
+                      <div>
+                        owner:{" "}
+                        <Address
+                          address={item.owner}
+                          ensProvider={mainnetProvider}
+                          blockExplorer={blockExplorer}
+                          fontSize={16}
+                        />
+                        <AddressInput
+                          ensProvider={mainnetProvider}
+                          placeholder="transfer to address"
+                          value={transferToAddresses[id]}
+                          onChange={newValue => {
+                            const update = {};
+                            update[id] = newValue;
+                            setTransferToAddresses({ ...transferToAddresses, ...update });
+                          }}
+                        />
+                        <Button
+                          onClick={() => {
+                            console.log("writeContracts", writeContracts);
+                            tx(writeContracts.YourCollectible.transferFrom(address, transferToAddresses[id], id));
+                          }}
+                        >
+                          Transfer
+                        </Button>
+                      </div>
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+          </Route> 
+          <Route exact path="/transfers">
+          <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <List
+                bordered
+                dataSource={transferEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item[0] + "_" + item[1] + "_" + item.blockNumber + "_" + item.args[2].toNumber()}>
+                      <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[2].toNumber()}</span>
+                      <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /> =&gt;
+                      <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+          </Route>
+          {/* End NFT Pages */}
         <Route path="/hints">
           <Hints
             address={address}
