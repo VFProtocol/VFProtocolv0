@@ -36,6 +36,8 @@ import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, ExampleUI, Hints, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
+
+// TODO: Make hardcoded payment value dynamic and responsive!!
 // Static Var for Testing
 // const escrowAddr = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
 const collectibleAddr = "";
@@ -328,6 +330,12 @@ const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
 const [toAddress, setToAddress] = useState();
 const [newToken, setNewToken] = useState();
+const [buyer, setBuyer] = useState();
+const [dealPrice, setPrice] = useState(1000); //Need to adjust state so it can receive inputs
+const [nftContract, setnftContract] = useState();
+const [tokenId2, setTokenId2] = useState();
+const [index,setIndex] = useState();
+const [payment, setPayment] = useState(1000); //Need to adjust to accept other states
 
 
 useEffect(() => {
@@ -544,18 +552,32 @@ const result = tx(
 };
 
 const moveNFT = async () => {
-const tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-
+// const tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+// const buyer = setBuyer;
+// const price = setPrice;
+// const nftContract = setnftContract;
+// const tokenId2 = settokenId;
 const result = tx(
   writeContracts &&
-    writeContracts.MultiSigWallet &&
-    writeContracts.MultiSigWallet.moveNFT(tokenAddress, 1),
+    writeContracts.BasicSale &&
+    writeContracts.BasicSale.saleInit(buyer, dealPrice, nftContract,tokenId2),
   update => {
     console.log("📡 Transaction Update:", update);
   },
 );
 };
 
+// THIS ONE HAS A HARDCODED PAYMENT VALUE
+const accept = async () => {
+  const result = tx(
+    writeContracts &&
+      writeContracts.BasicSale &&
+      writeContracts.BasicSale.buyInit(index, {value: 1000}),
+    update => {
+      console.log("📡 Transaction Update:", update);
+    },
+  );
+  };
 // END YOUR NFT COLLECTIBLES STUFF (until the actual app)
 
 
@@ -699,18 +721,33 @@ const result = tx(
             Approve NEW
           </Button>
         </div>
-              <Button
-                disabled={approving}
-                shape="round"
-                size="large"
-                onClick={() => {
-                  approve();
-                }}
-              >
-                Approve Contract
-              </Button>
             </div>
             <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+                        <div style={{ margin: 8 }}>
+            <AddressInput
+                autoFocus
+                ensProvider={mainnetProvider}
+                placeholder="Buyer"
+                value={buyer} //EDIT
+                onChange={setBuyer} //EDIT
+              />
+          <Input
+            onChange={e => {
+              setPrice(e.target.value);
+            }}
+          />
+          <AddressInput
+                autoFocus
+                ensProvider={mainnetProvider}
+                placeholder="Set NFT Contract"
+                value={nftContract} //EDIT
+                onChange={setnftContract} //EDIT
+              />
+          <Input
+            onChange={e => {
+              setTokenId2(e.target.value);
+            }}
+          />
               <Button
                 disabled={moving}
                 shape="round"
@@ -719,9 +756,39 @@ const result = tx(
                   moveNFT();
                 }}
               >
-                Move NFT
+                Create Handshake
               </Button>
             </div>
+            </div>
+            <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+            <div style={{ margin: 8 }}>
+ 
+          {/* All we do is check the index and price the buyer autoaccepts */}
+          <Input
+            onChange={e => {
+              setIndex(e.target.value);
+            }}
+          />
+          <Input
+            onChange={e => {
+              setPayment(e.target.value);
+            }}
+          />
+          <Button
+            style={{ marginTop: 8 }}
+            disabled={approving}
+            shape="round"
+            size="large"
+            onClick={() => {
+              accept();
+            }}
+            
+          >
+            Accept Handshake!
+          </Button>
+        </div>
+            </div>
+
             <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <List
                 bordered
