@@ -28,6 +28,19 @@ contract BasicSale {
   address private owner;
   uint public index;
 
+//   // Test Variables
+//     address public seller;
+//     address public buyer;
+//     uint public price; // In gwei
+//     uint public saleInitTime;
+//     uint public saleExpiration;
+//     address public nftContract;
+//     uint public tokenId;
+//     bool public offerExpired;
+//     bool public offerAccepted;
+//     bool public offerRejected;
+// // End Test Variables
+
   struct Sale {
     address seller;
     address buyer;
@@ -62,7 +75,7 @@ contract BasicSale {
       Sale memory thisSale = Sale({
         seller: msg.sender,
         buyer:_buyer,
-        price: _price * 10^18, // Convert ETH input to gwei
+        price: _price, // in GWEI
         saleInitTime: block.timestamp,
         saleExpiration: block.timestamp + 1 hours, // 1 hour to accept sale
         nftContract: _nftContract,
@@ -74,32 +87,54 @@ contract BasicSale {
       sales[index] = thisSale;
       emit SaleInit(index, msg.sender, thisSale.buyer, thisSale.price, thisSale.nftContract, thisSale.tokenId);
       index += 1;
-      console.log(msg.sender,"initiated sale", thisSale.buyer);
+      // // Set Test Variables
+      // seller = sales[index-1].seller;
+      //   buyer = sales[index-1].seller;
+      //   price = sales[index-1].price; // in GWEI
+      //   saleInitTime = sales[index-1].saleInitTime;
+      //   saleExpiration = sales[index-1].saleExpiration; // 1 hour to accept sale
+      //   nftContract = sales[index-1].nftContract;
+      //   tokenId = sales[index-1].tokenId;
+      //   offerExpired = sales[index-1].offerExpired;
+      //   offerAccepted = sales[index-1].offerAccepted;
+      //   offerRejected = sales[index-1].offerRejected;
+      //   // End Set Test Variables
   }
 
   // Approval for transfer needs to happen with JS so this contract can move
   // NFT When buyer submits ETH to Transfer Pool.
 
   function buyInit(uint _index) public payable {
-    require(IERC721(sales[index].nftContract).getApproved(sales[index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer");
-    require(!sales[index].offerAccepted, "Already Accepted");
-    require(!sales[index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
-    require(block.timestamp<sales[index].saleExpiration,"Time Expired");
-    require(!sales[index].offerRejected, "Offer Rejected");
-    require(sales[index].buyer==msg.sender,"Not authorized buyer");
-    require(msg.value==sales[index].price,"Not correct amount of ETH");
-    sales[index].offerAccepted = true;
+    require(_index<=index,"Index out of bounds");
+    require(IERC721(sales[_index].nftContract).getApproved(sales[_index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer");
+    require(!sales[_index].offerAccepted, "Already Accepted");
+    require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
+    require(block.timestamp<sales[_index].saleExpiration,"Time Expired");
+    require(!sales[_index].offerRejected, "Offer Rejected");
+    require(sales[_index].buyer==msg.sender,"Not authorized buyer");
+    require(msg.value==sales[_index].price,"Not correct amount of ETH");
+    sales[_index].offerAccepted = true;
 
-    balances[sales[index].seller] += msg.value;
-    IERC721(sales[index].nftContract).transferFrom(sales[index].seller, sales[index].buyer, sales[index].tokenId);
+    balances[sales[_index].seller] += msg.value;
+    IERC721(sales[_index].nftContract).transferFrom(sales[_index].seller, sales[_index].buyer, sales[_index].tokenId);
   }
 
   function reject(uint _index) public {
-    require(sales[index].buyer==msg.sender,"Not authorized buyer");
-    require(!sales[index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
-    require(block.timestamp<sales[index].saleExpiration,"Time Expired");
+    require(_index<=index,"Index out of bounds");
+    require(sales[_index].buyer==msg.sender,"Not authorized buyer");
+    require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
+    require(block.timestamp<sales[_index].saleExpiration,"Time Expired");
   }
 
+  function withdraw(uint _index) external {
+    require(_index<index,"Index out of bounds");
+    require(sales[_index].seller==msg.sender,"Not authorized seller");
+    require(balances[sales[_index].seller]>0,"No balance to withdraw");
+    uint withdrawAmount = balances[sales[_index].seller];
+    balances[sales[_index].seller] = 0;
+    (bool sent, bytes memory data) = payable(sales[_index].seller).call{value: withdrawAmount}("");
+        require(sent, "Failed to send Ether");
+  }
 
   receive() external payable {}
 

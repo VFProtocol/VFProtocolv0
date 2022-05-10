@@ -1,4 +1,4 @@
-import { Button, Card, Col, List, Menu, Row } from "antd";
+import { Button, Card, Col, Input, List, Menu, Row } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -31,10 +31,18 @@ import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
+import ERC721ABI from "./contracts/ABI/ERC721.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, ExampleUI, Hints, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
+// Static Var for Testing
+// const escrowAddr = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
+const collectibleAddr = "";
+// const targetToken = 1;
+// End Static Var for Testing
+// Dynamic Var Test
+// const escrowAddr = useContractReader(readContracts, "BasicSale", "address");
 
 
 const { BufferList } = require("bl");
@@ -214,6 +222,9 @@ function App(props) {
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts, "BasicSale", "purpose");
 
+
+
+  
   /*
   const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
   console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
@@ -292,6 +303,7 @@ function App(props) {
   
 // START YOUR COLLECTIBLES STUFF
 const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
+const escrowAddr = readContracts?.BasicSale?.address; //TODO: THIS IS HOW YOU GET THE MAIN CONTRACT ADDRESS
 console.log("🤗 balance:", balance);
 
 // 📟 Listen for broadcast events
@@ -314,7 +326,8 @@ const [approving, setApproving] = useState(false);
 const [moving, setMoving] = useState(false);
 const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
-
+const [toAddress, setToAddress] = useState();
+const [newToken, setNewToken] = useState();
 
 
 useEffect(() => {
@@ -503,11 +516,15 @@ const result = tx(
 
 const approve = async () => {
 // upload to ipfs
-const approvedAddress = "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be" 
+const approvedAddress = escrowAddr;
+const targetToken = newToken; 
+readContracts.toAddress = new ethers.Contract(toAddress, ERC721ABI, localProvider);
+writeContracts.toAddress = new ethers.Contract(toAddress, ERC721ABI, userSigner);
+
 const result = tx(
   writeContracts &&
-    writeContracts.YourCollectible &&
-    writeContracts.YourCollectible.approve(approvedAddress, 1),
+    writeContracts.toAddress &&
+    writeContracts.toAddress.approve(escrowAddr, targetToken),
   update => {
     console.log("📡 Transaction Update:", update);
     if (update && (update.status === "confirmed" || update.status === 1)) {
@@ -632,7 +649,56 @@ const result = tx(
                 MINT NFT
               </Button>
             </div>
+
             <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+            <div style={{ margin: 8 }}>
+            <AddressInput
+                autoFocus
+                ensProvider={mainnetProvider}
+                placeholder="Enter address"
+                value={toAddress}
+                onChange={setToAddress}
+              />
+          <Input
+            onChange={e => {
+              setNewToken(e.target.value);
+            }}
+          />
+          <Button
+            style={{ marginTop: 8 }}
+            disabled={approving}
+            shape="round"
+            size="large"
+            onClick={() => {
+              approve();
+            }}
+            
+            // onClick={async () => {
+            //   /* look how you call setPurpose on your contract: */
+            //   /* notice how you pass a call back for tx updates too */
+              
+            //   const result = tx(writeContracts.YourContract.setNewToken(newToken), update => {
+            //     console.log("📡 Transaction Update:", update);
+            //     if (update && (update.status === "confirmed" || update.status === 1)) {
+            //       console.log(" 🍾 Transaction " + update.hash + " finished!");
+            //       console.log(
+            //         " ⛽️ " +
+            //           update.gasUsed +
+            //           "/" +
+            //           (update.gasLimit || update.gas) +
+            //           " @ " +
+            //           parseFloat(update.gasPrice) / 1000000000 +
+            //           " gwei",
+            //       );
+            //     }
+            //   });
+            //   console.log("awaiting metamask/web3 confirm result...", result);
+            //   console.log(await result);
+            // }}
+          >
+            Approve NEW
+          </Button>
+        </div>
               <Button
                 disabled={approving}
                 shape="round"
