@@ -1,5 +1,6 @@
 import { Button, Card, Col, Input, List, Menu, Row } from "antd";
 import "antd/dist/antd.css";
+import {ExperimentOutlined} from "@ant-design/icons";
 import {
   useBalance,
   useContractLoader,
@@ -312,6 +313,10 @@ console.log("🤗 balance:", balance);
 const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
 console.log("📟 Transfer events:", transferEvents);
 
+// Listen for Sales Events
+const sellEvents = useEventListener(readContracts, "BasicSale", "SaleInit", localProvider, 1);
+const buyEvents = useEventListener(readContracts, "BasicSale", "BuyInit", localProvider, 1);
+
 //
 // 🧠 This effect will update yourCollectibles by polling when your balance changes
 //
@@ -610,6 +615,9 @@ const accept = async () => {
         <Menu.Item key="/transfers">
           <Link to="/transfers">Transfers</Link>
         </Menu.Item>
+        <Menu.Item key="/transferspecial">
+          <Link to="/transferspecial">Transfers Special</Link>
+        </Menu.Item>
         {/* End NFT Pages */}
         <Menu.Item key="/hints">
           <Link to="/hints">Hints</Link>
@@ -854,6 +862,42 @@ const accept = async () => {
                       <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[2].toNumber()}</span>
                       <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /> =&gt;
                       <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+          </Route>
+          <Route exact path="/transferspecial">
+          <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <List
+                bordered
+                dataSource={sellEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item[0]}>
+                      <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[0].toNumber()}</span>
+                      <ExperimentOutlined />      
+                      <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} /> ===&gt;
+                      <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} />
+
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+            <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <List
+                bordered
+                dataSource={buyEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item[0]}>
+                      <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[0].toNumber()}</span>
+                      <ExperimentOutlined />      
+                      <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} /> ===&gt;
+                      <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
+
                     </List.Item>
                   );
                 }}

@@ -21,7 +21,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 contract BasicSale {
 
   event SaleInit(uint index, address seller, address buyer, uint price, address NFTContract, uint TokenID);
-  event BuyInit();
+  event BuyInit(uint index, address buyer, address seller, uint price, address NFTContract, uint TokenID);
   event NFTSwapped();
   event SaleComplete();
 
@@ -117,6 +117,7 @@ contract BasicSale {
 
     balances[sales[_index].seller] += msg.value;
     IERC721(sales[_index].nftContract).transferFrom(sales[_index].seller, sales[_index].buyer, sales[_index].tokenId);
+    emit BuyInit(index, thisSale.buyer, msg.sender, thisSale.price, thisSale.nftContract, thisSale.tokenId);
   }
 
   function reject(uint _index) public {
