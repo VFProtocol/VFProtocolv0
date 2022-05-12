@@ -52,6 +52,7 @@ contract BasicSale {
     bool offerExpired;
     bool offerAccepted;
     bool offerRejected;
+    bool offerCanceled;
   }
   mapping (uint => Sale) sales;
   mapping (address => uint) balances;
@@ -82,7 +83,8 @@ contract BasicSale {
         tokenId: _tokenId,
         offerExpired: false,
         offerAccepted: false,
-        offerRejected: false
+        offerRejected: false,
+        offerCanceled: false
       });
       sales[index] = thisSale;
       emit SaleInit(index, msg.sender, thisSale.buyer, thisSale.price, thisSale.nftContract, thisSale.tokenId);
@@ -109,6 +111,7 @@ contract BasicSale {
     require(IERC721(sales[_index].nftContract).getApproved(sales[_index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer");
     require(!sales[_index].offerAccepted, "Already Accepted");
     require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
+    require(!sales[_index].offerCanceled, "Offer Canceled");
     require(block.timestamp<sales[_index].saleExpiration,"Time Expired");
     require(!sales[_index].offerRejected, "Offer Rejected");
     require(sales[_index].buyer==msg.sender,"Not authorized buyer");
@@ -135,6 +138,12 @@ contract BasicSale {
     balances[sales[_index].seller] = 0;
     (bool sent, bytes memory data) = payable(sales[_index].seller).call{value: withdrawAmount}("");
         require(sent, "Failed to send Ether");
+  }
+
+  function cancel(uint _index) external {
+    require(_index<index,"Index out of bounds");
+    require(sales[_index].seller==msg.sender,"Not authorized seller");
+    sales[_index].offerCanceled = true;
   }
 
   receive() external payable {}

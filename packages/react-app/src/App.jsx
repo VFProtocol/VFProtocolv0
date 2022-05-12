@@ -1,4 +1,4 @@
-import { Button, Card, Col, Input, List, Menu, Row } from "antd";
+import { Button, Card, Col, Input, List, Menu, Row, Statistic } from "antd";
 import "antd/dist/antd.css";
 import {ExperimentOutlined} from "@ant-design/icons";
 import {
@@ -34,7 +34,7 @@ import externalContracts from "./contracts/external_contracts";
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import ERC721ABI from "./contracts/ABI/ERC721.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph } from "./views";
+import { Home, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 
@@ -603,7 +603,7 @@ const accept = async () => {
       />
       <Menu style={{ textAlign: "center", marginTop: 40 }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
-          <Link to="/">App Home</Link>
+          <Link to="/">App Home CLEANED</Link>
         </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
@@ -619,15 +619,6 @@ const accept = async () => {
           <Link to="/transferspecial">Transfers Special</Link>
         </Menu.Item>
         {/* End NFT Pages */}
-        <Menu.Item key="/hints">
-          <Link to="/hints">Hints</Link>
-        </Menu.Item>
-        <Menu.Item key="/exampleui">
-          <Link to="/exampleui">ExampleUI</Link>
-        </Menu.Item>
-        <Menu.Item key="/mainnetdai">
-          <Link to="/mainnetdai">Mainnet DAI</Link>
-        </Menu.Item>
         <Menu.Item key="/subgraph">
           <Link to="/subgraph">Subgraph</Link>
         </Menu.Item>
@@ -635,7 +626,8 @@ const accept = async () => {
 
       <Switch>
         <Route exact path="/">
-          {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
+          {/* pass in any web3 props to this Home component. For example, yourLocalBalance 
+          This is from the HOME VIEW in the src bucket <- edit this later*/}
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
         </Route>
         <Route exact path="/debug">
@@ -702,29 +694,6 @@ const accept = async () => {
             onClick={() => {
               approve();
             }}
-            
-            // onClick={async () => {
-            //   /* look how you call setPurpose on your contract: */
-            //   /* notice how you pass a call back for tx updates too */
-              
-            //   const result = tx(writeContracts.YourContract.setNewToken(newToken), update => {
-            //     console.log("📡 Transaction Update:", update);
-            //     if (update && (update.status === "confirmed" || update.status === 1)) {
-            //       console.log(" 🍾 Transaction " + update.hash + " finished!");
-            //       console.log(
-            //         " ⛽️ " +
-            //           update.gasUsed +
-            //           "/" +
-            //           (update.gasLimit || update.gas) +
-            //           " @ " +
-            //           parseFloat(update.gasPrice) / 1000000000 +
-            //           " gwei",
-            //       );
-            //     }
-            //   });
-            //   console.log("awaiting metamask/web3 confirm result...", result);
-            //   console.log(await result);
-            // }}
           >
             Approve NEW
           </Button>
@@ -868,7 +837,8 @@ const accept = async () => {
               />
             </div>
           </Route>
-          <Route exact path="/transferspecial">
+          <Route exact path="/transferspecial"> 
+          {/* Turn into Cards */}
           <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <List
                 bordered
@@ -877,10 +847,17 @@ const accept = async () => {
                   return (
                     <List.Item key={item[0]}>
                       <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[0].toNumber()}</span>
-                      <ExperimentOutlined />      
+                      <ExperimentOutlined /> 
+                      <Statistic title="NFT Project Title" value="NFT Image Here" />     
                       <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} /> ===&gt;
                       <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} />
-
+                      <Button style={{ marginTop: 8 }}
+                          disabled={approving}
+                          shape="round"
+                          size="large"
+                        >
+                          Cancel Handshake
+                        </Button>
                     </List.Item>
                   );
                 }}
@@ -894,7 +871,9 @@ const accept = async () => {
                   return (
                     <List.Item key={item[0]}>
                       <span style={{ fontSize: 16, marginRight: 8 }}>#{item.args[0].toNumber()}</span>
-                      <ExperimentOutlined />      
+                      "NFT Image"
+                      "NFT Name"
+                      <ExperimentOutlined />  
                       <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} /> ===&gt;
                       <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
 
@@ -905,50 +884,7 @@ const accept = async () => {
             </div>
           </Route>
           {/* End NFT Pages */}
-        <Route path="/hints">
-          <Hints
-            address={address}
-            yourLocalBalance={yourLocalBalance}
-            mainnetProvider={mainnetProvider}
-            price={price}
-          />
-        </Route>
-        <Route path="/exampleui">
-          <ExampleUI
-            address={address}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
-            tx={tx}
-            writeContracts={writeContracts}
-            readContracts={readContracts}
-            purpose={purpose}
-          />
-        </Route>
-        <Route path="/mainnetdai">
-          <Contract
-            name="DAI"
-            customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
-            signer={userSigner}
-            provider={mainnetProvider}
-            address={address}
-            blockExplorer="https://etherscan.io/"
-            contractConfig={contractConfig}
-            chainId={1}
-          />
-          {/*
-            <Contract
-              name="UNI"
-              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
-              signer={userSigner}
-              provider={mainnetProvider}
-              address={address}
-              blockExplorer="https://etherscan.io/"
-            />
-            */}
-        </Route>
+        
         <Route path="/subgraph">
           <Subgraph
             subgraphUri={props.subgraphUri}
