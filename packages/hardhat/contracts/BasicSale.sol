@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 // Todo: Reminders - Regenerate ABI and set in React App folder every time you add functions
-// Todo: 1. Add Requires for protection
-// Todo: 2. Check on Mapping structures to see if we're actually tracking sales right
+// Todo: Add Requires for protection
+// Todo: Check on Mapping structures to see if we're actually tracking sales right
 // Todo: Manually check to see if it works when you approve manually (Do it JS later)
 // Todo: Add Comments
 // Todo: Add emergency withdraw to send all balances back to sellers
@@ -17,6 +17,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 // Todo: Add emergency Lock
 // Todo: Add OpenZep "Ownable" contract for owner(audited guard)
 // Todo: Change contract and App dependencies from BasicSale to VFProtocolV0 (rename everything on theme)
+// Todo: Test DelegateCall with "Submit Handshake" for Approval pattern 
 // Todo: Explore "Free for All" mode for after time expiry (anyone can complete deal)
 
 // This contract is designed to manage the core smart contract logic for transferring ERC721 tokens for ETH (referred to as a "Handshake")
@@ -33,6 +34,7 @@ contract BasicSale is ReentrancyGuard {
 
   event SaleInit(uint index, address seller, address buyer, uint price, address NFTContract, uint TokenID); // Logs all initiated Handshakes
   event BuyInit(uint index, address buyer, address seller, uint price, address NFTContract, uint TokenID); // Logs all accepted Handshakes
+  event Withdrawals(address withdrawer, uint amountWithdrawn); //Logs all withdrawals
   event NFTSwapped(); // Logs all successful Handshakes 
   
 
@@ -87,12 +89,13 @@ contract BasicSale is ReentrancyGuard {
       require(_nftContract!=address(0), "Null Contract address"); //Checks that NFT contract isn't 0 address
       require(IERC721(_nftContract).ownerOf(_tokenId)==msg.sender, "Sender not owner or Token does not exist"); //Checks that msg.sender is token owner and if token exists 
 
+      // Same as described above
       Sale memory thisSale = Sale({
-        seller: msg.sender,
+        seller: msg.sender, 
         buyer:_buyer,
         price: _price, // in GWEI
         saleInitTime: block.timestamp,
-        saleExpiration: block.timestamp + 1 hours, // 1 hour to accept sale
+        saleExpiration: block.timestamp + 1 hours, // 1 hour to accept sale from Handshake creation
         nftContract: _nftContract,
         tokenId: _tokenId,
         offerExpired: false,
@@ -100,10 +103,14 @@ contract BasicSale is ReentrancyGuard {
         offerRejected: false,
         offerCanceled: false
       });
-      sales[index] = thisSale;
-      emit SaleInit(index, msg.sender, thisSale.buyer, thisSale.price, thisSale.nftContract, thisSale.tokenId);
-      index += 1;
-      // // Set Test Variables
+
+      sales[index] = thisSale; //Assign individual Handshake struct to location in handshakes mapping 
+
+      emit SaleInit(index, msg.sender, thisSale.buyer, thisSale.price, thisSale.nftContract, thisSale.tokenId); //Emits Handshake initiation for subgraph tracking
+      
+      index += 1; //Increment handshakes index 
+
+      // // Set Test Variables (SCAFFOLD ETH)
       // seller = sales[index-1].seller;
       //   buyer = sales[index-1].seller;
       //   price = sales[index-1].price; // in GWEI
@@ -117,57 +124,64 @@ contract BasicSale is ReentrancyGuard {
       //   // End Set Test Variables
   }
 
-  // Approval for transfer needs to happen with JS so this contract can move
-  // NFT When buyer submits ETH to Transfer Pool.
+  // Now Approval for ERC721 transfer needs to happen with frontend interaction via JS so VFProtocolv0 contract can transfer
+  // NFT when buyer submits ETH to Transfer Pool. Front end pattern is Seller -> Visually Confirm Handshake, "Approve NFT", "Submit Handshake"
 
+
+  // This is how the Buyer accepts the handshake (pass along index and send appropriate amount of ETH to VFProtocolv0)
+ 
   function buyInit(uint _index) public payable {
-    require(_index<=index,"Index out of bounds");
-    require(IERC721(sales[_index].nftContract).getApproved(sales[_index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer");
-    require(!sales[_index].offerAccepted, "Already Accepted");
+    require(_index<=index,"Index out of bounds"); //Checks if index exists
+    require(IERC721(sales[_index].nftContract).getApproved(sales[_index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer"); //Confirms Approval pattern is met
+    require(!sales[_index].offerAccepted, "Already Accepted"); // Check to ensure this Handshake hasn't already been accepted/paid
     require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
-    require(!sales[_index].offerCanceled, "Offer Canceled");
-    require(block.timestamp<sales[_index].saleExpiration,"Time Expired");
-    require(!sales[_index].offerRejected, "Offer Rejected");
-    require(sales[_index].buyer==msg.sender,"Not authorized buyer");
-    require(msg.value==sales[_index].price,"Not correct amount of ETH");
-    sales[_index].offerAccepted = true;
+    require(!sales[_index].offerCanceled, "Offer Canceled"); // Checks to ensure seller didn't cancel offer
+    require(block.timestamp<sales[_index].saleExpiration,"Time Expired"); // Checks to ensure 60 minute time limit hasn't passed
+    require(!sales[_index].offerRejected, "Offer Rejected"); // Checks to make sure offer isn't rejected then re-attempted to get accepted (MIGHT REMOVE)
+    require(sales[_index].buyer==msg.sender,"Not authorized buyer"); // Checks to ensure redeemer is whitelisted buyer
+    require(msg.value==sales[_index].price,"Not correct amount of ETH"); // Checks to ensure enough ETH is sent to pay seller
+    sales[_index].offerAccepted = true; // Sets acceptance to true after acceptance
 
-    balances[sales[_index].seller] += msg.value;
-    IERC721(sales[_index].nftContract).transferFrom(sales[_index].seller, sales[_index].buyer, sales[_index].tokenId);
-    emit BuyInit(index, sales[_index].buyer,sales[_index].seller, sales[_index].price, sales[_index].nftContract, sales[_index].tokenId);
+    balances[sales[_index].seller] += msg.value; //Updates withdrawable ETH for seller after VFProtocolv0 receives ETH
+    IERC721(sales[_index].nftContract).transferFrom(sales[_index].seller, sales[_index].buyer, sales[_index].tokenId); //Transfers NFT to buyer after payment
+    emit BuyInit(index, sales[_index].buyer,sales[_index].seller, sales[_index].price, sales[_index].nftContract, sales[_index].tokenId); //Emits Handshake Acceptance
   }
 
 
-// Might "solve" with just deleting entries from front end (Cleaner/less gas wasted?). Is this an attack vector?
+// Might "solve" rejection problem with just deleting entries from front end (Cleaner/less gas wasted?). Is this an attack vector?
   function reject(uint _index) public {
-    require(_index<=index,"Index out of bounds");
-    require(sales[_index].buyer==msg.sender,"Not authorized buyer");
+    require(_index<=index,"Index out of bounds"); //Check if index exists
+    require(sales[_index].buyer==msg.sender,"Not authorized buyer"); //Ensures only authorized buyer can reject offer
     require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
-    require(block.timestamp<sales[_index].saleExpiration,"Time Expired");
-      sales[_index].offerRejected = true;
+    require(block.timestamp<sales[_index].saleExpiration,"Time Expired"); //Checks to see if time expired to avoid gas wastage
+      sales[_index].offerRejected = true; //Sets rejection status to true (ending possibility of handshake resolution)
   }
 
+// Withdraw function for sellers to receive their payments. Seller submits index of ANY transaction on which they are seller, then runs checks and allow withdrawals
   function withdraw(uint _index) external {
-    require(_index<index,"Index out of bounds");
-    require(sales[_index].seller==msg.sender,"Not authorized seller");
-    require(balances[sales[_index].seller]>0,"No balance to withdraw");
-    uint withdrawAmount = balances[sales[_index].seller];
-    balances[sales[_index].seller] = 0;
-    (bool sent, bytes memory data) = payable(sales[_index].seller).call{value: withdrawAmount}("");
-        require(sent, "Failed to send Ether");
+    require(_index<index,"Index out of bounds"); //Check if index exists
+    require(sales[_index].seller==msg.sender || owner==msg.sender,"Not authorized seller or owner"); //Check if withdrawer is authorized seller or owner
+    require(balances[msg.sender]>0,"No balance to withdraw"); //Checks if msg.sender has a balance
+    uint withdrawAmount = balances[msg.sender]; //Locks withdraw amount
+    balances[msg.sender] = 0; //Resets balance (Checks - Effects - Transfers pattern)
+    (bool sent, bytes memory data) = payable(msg.sender).call{value: withdrawAmount}(""); //Sends ETH balance to seller
+        require(sent, "Failed to send Ether"); //Reverts if it fails
+    
   }
 
+  // Cancel function allows a seller to cancel handshake
   function cancel(uint _index) external {
-    require(_index<index,"Index out of bounds");
-    require(sales[_index].seller==msg.sender,"Not authorized seller");
+    require(_index<index,"Index out of bounds"); // Checks to ensure index exists
+    require(sales[_index].seller==msg.sender,"Not authorized seller"); //Checks to ensure only seller can cancel Handshake
+    require(block.timestamp<sales[_index].saleExpiration,"Time Expired"); //Checks to see if time expired to avoid gas wastage
     sales[_index].offerCanceled = true;
   }
 
-  receive() external payable {}
+  //Receive function to handle unknown transactions
+  receive() external payable {
+    balances[owner] += msg.value; //
+  } 
 
-  function emergencyWithdraw() public OnlyOwner {
-
-  }
 
 }
   
