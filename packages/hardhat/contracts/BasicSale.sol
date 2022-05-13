@@ -25,6 +25,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 // in a zero fee, peer to peer, permissionless, and decentralized way. This contract works in concert with an ERC721 Approve pattern implemented by
 // the front end of VF Protocol. The transaction pattern assumes a Buyer and Seller have already "found" each other somewhere else and 
 // now want to transact some ERC721 token. It works as follows:
+//
 // 1. Seller initiates Handshake by specifying NFT, Price, and target Buyer (Seller is prompted for "transferFrom" Approval)
 // 2. Buyer has 1 hour to accept or rejects Handshake in dApp (acceptance occurs upon transfer of the appropriate amount of ETH to VFProtocolv0 and ERC721 is transferred)
 // 3. Seller withdraws ETH from VFProtocolv0 when convenient 
@@ -88,6 +89,7 @@ contract BasicSale is ReentrancyGuard, Pausable {
     _pause();
   }
 
+// Emergency unpause functions only accessible by owner
   function unpause() public OnlyOwner {
     _unpause();
   }
