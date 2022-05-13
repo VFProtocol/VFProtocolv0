@@ -6,6 +6,7 @@ import "hardhat/console.sol";
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
 // Todo: Reminders - Regenerate ABI and set in React App folder every time you add functions
 // Todo: Add Requires for protection
@@ -29,7 +30,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 // 3. Seller withdraws ETH from VFProtocolv0 when convenient 
 // 
 
-contract BasicSale is ReentrancyGuard {
+contract BasicSale is ReentrancyGuard, Pausable {
 
 
   event SaleInit(uint index, address seller, address buyer, uint price, address NFTContract, uint TokenID); // Logs all initiated Handshakes
@@ -82,8 +83,18 @@ contract BasicSale is ReentrancyGuard {
     _;
   }
 
+  // Emergency Pause functions only accessible by owner
+  function pause() public OnlyOwner {
+    _pause();
+  }
+
+  function unpause() public OnlyOwner {
+    _unpause();
+  }
+
+
   // Seller Creates Handshake with all pertinent transaction data
-  function saleInit(address _buyer, uint _price, address _nftContract, uint _tokenId) public nonReentrant() {
+  function saleInit(address _buyer, uint _price, address _nftContract, uint _tokenId) public nonReentrant() whenNotPaused() {
       require(_buyer!=address(0), "Null Buyer Address");  //Checks if buyer address isn't 0 address
       require(_price > 0, "Need non-zero price"); //Checks if price is non-zero
       require(_nftContract!=address(0), "Null Contract address"); //Checks that NFT contract isn't 0 address
@@ -130,7 +141,7 @@ contract BasicSale is ReentrancyGuard {
 
   // This is how the Buyer accepts the handshake (pass along index and send appropriate amount of ETH to VFProtocolv0)
  
-  function buyInit(uint _index) public payable {
+  function buyInit(uint _index) public payable nonReentrant() whenNotPaused() {
     require(_index<=index,"Index out of bounds"); //Checks if index exists
     require(IERC721(sales[_index].nftContract).getApproved(sales[_index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer"); //Confirms Approval pattern is met
     require(!sales[_index].offerAccepted, "Already Accepted"); // Check to ensure this Handshake hasn't already been accepted/paid
@@ -149,7 +160,7 @@ contract BasicSale is ReentrancyGuard {
 
 
 // Might "solve" rejection problem with just deleting entries from front end (Cleaner/less gas wasted?). Is this an attack vector?
-  function reject(uint _index) public {
+  function reject(uint _index) public whenNotPaused() {
     require(_index<=index,"Index out of bounds"); //Check if index exists
     require(sales[_index].buyer==msg.sender,"Not authorized buyer"); //Ensures only authorized buyer can reject offer
     require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??
@@ -158,7 +169,7 @@ contract BasicSale is ReentrancyGuard {
   }
 
 // Withdraw function for sellers to receive their payments. Seller submits index of ANY transaction on which they are seller, then runs checks and allow withdrawals
-  function withdraw(uint _index) external {
+  function withdraw(uint _index) external nonReentrant() whenNotPaused() {
     require(_index<index,"Index out of bounds"); //Check if index exists
     require(sales[_index].seller==msg.sender || owner==msg.sender,"Not authorized seller or owner"); //Check if withdrawer is authorized seller or owner
     require(balances[msg.sender]>0,"No balance to withdraw"); //Checks if msg.sender has a balance
@@ -170,7 +181,7 @@ contract BasicSale is ReentrancyGuard {
   }
 
   // Cancel function allows a seller to cancel handshake
-  function cancel(uint _index) external {
+  function cancel(uint _index) external  whenNotPaused() {
     require(_index<index,"Index out of bounds"); // Checks to ensure index exists
     require(sales[_index].seller==msg.sender,"Not authorized seller"); //Checks to ensure only seller can cancel Handshake
     require(block.timestamp<sales[_index].saleExpiration,"Time Expired"); //Checks to see if time expired to avoid gas wastage
@@ -178,8 +189,8 @@ contract BasicSale is ReentrancyGuard {
   }
 
   //Receive function to handle unknown transactions
-  receive() external payable {
-    balances[owner] += msg.value; //
+  receive() external payable whenNotPaused() {
+    balances[owner] += msg.value; //Catches stray ETH sent to contract
   } 
 
 
