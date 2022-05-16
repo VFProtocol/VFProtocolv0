@@ -41,7 +41,7 @@ import { useStaticJsonRPC } from "./hooks";
 // TODO: Make hardcoded payment value dynamic and responsive!!
 // Static Var for Testing
 // const escrowAddr = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
-const collectibleAddr = "";
+// const collectibleAddr = "";
 // const targetToken = 1;
 // End Static Var for Testing
 // Dynamic Var Test
@@ -55,13 +55,6 @@ const ipfs = ipfsAPI({ host: "ipfs.infura.io", port: "5001", protocol: "https" }
 const { ethers } = require("ethers");
 /*
     Welcome to 🏗 scaffold-eth !
-
-    Code:
-    https://github.com/scaffold-eth/scaffold-eth
-
-    Support:
-    https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA
-    or DM @austingriffith on twitter or telegram
 
     You should get your own Alchemy.com & Infura.io ID and put it in `constants.js`
     (this is your connection to the main Ethereum network for ENS etc.)
