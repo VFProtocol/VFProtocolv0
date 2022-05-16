@@ -333,8 +333,9 @@ const [dealPrice, setPrice] = useState(1000); //Need to adjust state so it can r
 const [nftContract, setnftContract] = useState();
 const [tokenId2, setTokenId2] = useState();
 const [index,setIndex] = useState();
-const [payment, setPayment] = useState(1000); //Need to adjust to accept other states
-
+const [payment, setPayment] = useState(); //Need to adjust to accept other states
+const [accepting, setaccepting] = useState(false);
+const [canceling, setCanceling] = useState(false);
 
 useEffect(() => {
   const updateYourCollectibles = async () => {
@@ -570,7 +571,7 @@ const accept = async () => {
   const result = tx(
     writeContracts &&
       writeContracts.BasicSale &&
-      writeContracts.BasicSale.buyInit(index, {value: 1000}),
+      writeContracts.BasicSale.buyInit(index, {value:payment}),
     update => {
       console.log("📡 Transaction Update:", update);
     },
@@ -596,7 +597,7 @@ const accept = async () => {
       />
       <Menu style={{ textAlign: "center", marginTop: 40 }} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/">
-          <Link to="/">App Home CLEANED</Link>
+          <Link to="/">Create Handshakes</Link>
         </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
@@ -618,39 +619,8 @@ const accept = async () => {
       </Menu>
 
       <Switch>
-        <Route exact path="/">
-          {/* pass in any web3 props to this Home component. For example, yourLocalBalance 
-          This is from the HOME VIEW in the src bucket <- edit this later*/}
-          <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
-        </Route>
-        <Route exact path="/debug">
-          {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
-
-          <Contract
-            name="BasicSale"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-          <Contract
-            name={"YourCollectible"}
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-        </Route>
         {/* Begin NFT Pages */}
-        <Route exact path="/nft">
+        <Route exact path="/">
         
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <Button
@@ -746,7 +716,7 @@ const accept = async () => {
           />
           <Button
             style={{ marginTop: 8 }}
-            disabled={approving}
+            disabled={accepting}
             shape="round"
             size="large"
             onClick={() => {
@@ -813,6 +783,32 @@ const accept = async () => {
               />
             </div>
           </Route> 
+          <Route exact path="/debug">
+          {/*
+                🎛 this scaffolding is full of commonly used components
+                this <Contract/> component will automatically parse your ABI
+                and give you a form to interact with it locally
+            */}
+
+          <Contract
+            name="BasicSale"
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
+          <Contract
+            name={"YourCollectible"}
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
+        </Route>
           <Route exact path="/transfers">
           <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <List
@@ -845,7 +841,7 @@ const accept = async () => {
                       <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} /> ===&gt;
                       <Address address={item.args[2]} ensProvider={mainnetProvider} fontSize={16} />
                       <Button style={{ marginTop: 8 }}
-                          disabled={approving}
+                          disabled={canceling}
                           shape="round"
                           size="large"
                         >

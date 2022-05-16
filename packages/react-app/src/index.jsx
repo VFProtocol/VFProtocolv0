@@ -11,6 +11,8 @@ const themes = {
   light: `${process.env.PUBLIC_URL}/light-theme.css`,
 };
 
+const Logo = `${process.env.PUBLIC_URL}/ReactLogo.png`;
+
 const prevTheme = window.localStorage.getItem("theme");
 
 const subgraphUri = "http://localhost:8000/subgraphs/name/scaffold-eth/your-contract";
@@ -30,3 +32,5 @@ ReactDOM.render(
   </ApolloProvider>,
   document.getElementById("root"),
 );
+
+export {Logo}
