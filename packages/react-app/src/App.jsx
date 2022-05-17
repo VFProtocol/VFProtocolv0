@@ -29,7 +29,9 @@ import {
   NetworkSwitch,
   HandshakeCardSeller,
   HandshakeCardBuyer,
-  HCardBuyerList
+  HCardBuyerList,
+  NFTcard,
+  NFTcardGrid
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -624,7 +626,10 @@ const accept = async () => {
       <Switch>
         {/* Begin NFT Pages */}
         <Route exact path="/">
-        
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+          <NFTcard />
+          <NFTcardGrid />
+        </div>
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <Button
                 disabled={minting}
