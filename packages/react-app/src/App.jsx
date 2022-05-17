@@ -28,7 +28,8 @@ import {
   FaucetHint,
   NetworkSwitch,
   HandshakeCardSeller,
-  HandshakeCardBuyer
+  HandshakeCardBuyer,
+  HCardBuyerList
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -798,6 +799,7 @@ const accept = async () => {
               </Col>
               </Row>
             </div>
+            <HCardBuyerList />
             </div>
           </Route> 
           <Route exact path="/debug">

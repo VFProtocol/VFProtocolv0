@@ -25,3 +25,4 @@ export { default as MultiAddressInput } from "./MultiAddressInput";
 export { default as TokenSelect } from "./TokenSelect";
 export { default as HandshakeCardSeller } from "./HandshakeCardSeller";
 export { default as HandshakeCardBuyer } from "./HandshakeCardBuyer";
+export { default as HCardBuyerList } from "./HCardBuyerList";
