@@ -27,7 +27,8 @@ import {
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
-  HandshakeCard
+  HandshakeCardSeller,
+  HandshakeCardBuyer
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -787,13 +788,13 @@ const accept = async () => {
             <div className="site-card-wrapper">
             <Row gutter={16}>
               <Col span={8}>
-              <HandshakeCard />
+              <HandshakeCardSeller />
               </Col>
               <Col span={8}>
-              <HandshakeCard />
+              <HandshakeCardBuyer />
               </Col>
               <Col span={8}>
-              <HandshakeCard />
+              <HandshakeCardSeller />
               </Col>
               </Row>
             </div>

@@ -22,7 +22,7 @@ import {
   Handshake({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock })
 **/
 
-export default function HandshakeCard(props) {
+export default function HandshakeCardSeller(props) {
   // 📟 Listen for broadcast events
 // const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
 const onClick = () => console.log("Works!");
@@ -54,8 +54,7 @@ const data = [
         }
         actions={[
           <>
-          <Button type="primary" onClick={onClick} style={{ background: "green", borderColor: "green"}}>Accept</Button>
-          <Button onClick={onClick}>Reject</Button>
+          <Button type="primary" onClick={onClick} style={{ background: "Red", borderColor: "Black"}}>Cancel Handshake</Button>
           </>
         ]}
         extra={data.token}
@@ -78,7 +77,7 @@ const data = [
                 title={<Text>Price: {item.Price}</Text>}
               />
               <List.Item.Meta
-                title={<Text><Title level={2}>Time Left: <ClockCircleOutlined spin="true" />{item.TimeLeft}</Title></Text>}
+                title={<Text><Title level={2}>Time Left: <ClockCircleOutlined />{item.TimeLeft}</Title></Text>}
                 />
               </List.Item>
             )}
