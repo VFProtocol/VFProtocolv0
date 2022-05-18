@@ -24,8 +24,8 @@ export default function NFTcardGrid(props) {
 // const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
 
 const gridStyle = {
-    width: 200,
-    height: 200,
+    width: 213,
+    height: 213,
     textAlign: 'center',
   };
   

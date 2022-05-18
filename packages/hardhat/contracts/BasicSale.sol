@@ -144,7 +144,7 @@ contract BasicSale is ReentrancyGuard, Pausable {
   // This is how the Buyer accepts the handshake (pass along index and send appropriate amount of ETH to VFProtocolv0)
  
   function buyInit(uint _index) public payable nonReentrant() whenNotPaused() {
-    require(_index<=index,"Index out of bounds"); //Checks if index exists
+    require(_index<index,"Index out of bounds"); //Checks if index exists
     require(IERC721(sales[_index].nftContract).getApproved(sales[_index].tokenId)==address(this),"Seller hasn't Approved VFP to Transfer"); //Confirms Approval pattern is met
     require(!sales[_index].offerAccepted, "Already Accepted"); // Check to ensure this Handshake hasn't already been accepted/paid
     require(!sales[_index].offerExpired, "Offer Expired"); //Might delete later because who will set expiration states (and why)??

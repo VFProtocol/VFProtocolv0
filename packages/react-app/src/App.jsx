@@ -564,7 +564,7 @@ const moveNFT = async () => {
 const result = tx(
   writeContracts &&
     writeContracts.BasicSale &&
-    writeContracts.BasicSale.saleInit(buyer, dealPrice, nftContract,tokenId2),
+    writeContracts.BasicSale.saleInit(buyer, dealPrice, toAddress,newToken),
   update => {
     console.log("📡 Transaction Update:", update);
   },
@@ -604,6 +604,9 @@ const accept = async () => {
         <Menu.Item key="/">
           <Link to="/">Create Handshakes</Link>
         </Menu.Item>
+        <Menu.Item key="/mvp">
+          <Link to="/mvp">MVP Lander</Link>
+        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>
@@ -626,10 +629,6 @@ const accept = async () => {
       <Switch>
         {/* Begin NFT Pages */}
         <Route exact path="/">
-        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-          <NFTcard />
-          <NFTcardGrid />
-        </div>
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <Button
                 disabled={minting}
@@ -656,6 +655,7 @@ const accept = async () => {
             onChange={e => {
               setNewToken(e.target.value);
             }}
+            placeholder="Enter Token ID"
           />
           <Button
             style={{ marginTop: 8 }}
@@ -682,26 +682,16 @@ const accept = async () => {
           <Input
             onChange={e => {
               setPrice(e.target.value);
+              
             }}
-          />
-          <AddressInput
-                autoFocus
-                ensProvider={mainnetProvider}
-                placeholder="Set NFT Contract"
-                value={nftContract} //EDIT
-                onChange={setnftContract} //EDIT
-              />
-          <Input
-            onChange={e => {
-              setTokenId2(e.target.value);
-            }}
+            placeholder="Set Price"
           />
               <Button
                 disabled={moving}
                 shape="round"
                 size="large"
                 onClick={() => {
-                  moveNFT();
+                  moveNFT(); 
                 }}
               >
                 Create Handshake
@@ -807,6 +797,37 @@ const accept = async () => {
             <HCardBuyerList />
             </div>
           </Route> 
+          <Route exact path="/mvp">
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+          <NFTcardGrid />
+        </div>
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 320 }}>
+        <AddressInput
+                autoFocus
+                ensProvider={mainnetProvider}
+                placeholder="Enter Buyer address"
+                value={toAddress}
+                onChange={setToAddress}
+              />
+          <Input
+            onChange={e => {
+              setNewToken(e.target.value);
+            }}
+            placeholder="Enter Sale Price"
+          />
+          <Button
+            style={{ marginTop: 8 }}
+            disabled={approving}
+            shape="round"
+            size="large"
+            onClick={() => {
+              approve(); 
+            }}
+          >
+            Review Handshake
+          </Button>
+          </div>
+        </Route>
           <Route exact path="/debug">
           {/*
                 🎛 this scaffolding is full of commonly used components
