@@ -607,6 +607,9 @@ const accept = async () => {
         <Menu.Item key="/mvp">
           <Link to="/mvp">MVP Lander</Link>
         </Menu.Item>
+        <Menu.Item key="/mvpconfirm">
+          <Link to="/mvpconfirm">MVP Confirmation Page</Link>
+        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>
@@ -811,9 +814,10 @@ const accept = async () => {
               />
           <Input
             onChange={e => {
-              setNewToken(e.target.value);
+              setPrice(e.target.value);
+              
             }}
-            placeholder="Enter Sale Price"
+            placeholder="Set Price"
           />
           <Button
             style={{ marginTop: 8 }}
@@ -827,6 +831,16 @@ const accept = async () => {
             Review Handshake
           </Button>
           </div>
+        </Route>
+        <Route exact path="/mvpconfirm">
+        <Address
+          address={toAddress}
+          ensProvider={mainnetProvider}
+          blockExplorer={blockExplorer}
+          fontSize={16}/>
+
+      <Statistic title="Sale price" value={dealPrice} />
+
         </Route>
           <Route exact path="/debug">
           {/*
