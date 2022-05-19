@@ -1,4 +1,4 @@
-import { Button, Card, Col, Input, List, Menu, Row, Statistic } from "antd";
+import { Alert, Button, Card, Col, Input, List, Menu, Row, Statistic } from "antd";
 import "antd/dist/antd.css";
 import {ExperimentOutlined} from "@ant-design/icons";
 import {
@@ -244,7 +244,7 @@ console.log("📟 Transfer events:", transferEvents);
 // Listen for Sales Events
 const sellEvents = useEventListener(readContracts, "BasicSale", "SaleInit", localProvider, 1);
 const buyEvents = useEventListener(readContracts, "BasicSale", "BuyInit", localProvider, 1);
-
+const successConfirm = <Alert message="Success Text" type="success" />; //Create Alert
 //
 // 🧠 This effect will update yourCollectibles by polling when your balance changes
 //
@@ -259,12 +259,12 @@ const [nftContractAddress, setnftContractAddress] = useState("0xNFTContractAddre
 const [newToken, setNewToken] = useState();
 const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
 const [dealPrice, setPrice] = useState(); //Need to adjust state so it can receive inputs
-const [nftContract, setnftContract] = useState();
 const [tokenId2, setTokenId2] = useState();
 const [index,setIndex] = useState();
 const [payment, setPayment] = useState(); //Need to adjust to accept other states
 const [accepting, setaccepting] = useState(false);
 const [canceling, setCanceling] = useState(false);
+
 
 useEffect(() => {
   const updateYourCollectibles = async () => {
@@ -444,21 +444,22 @@ const result = tx(
           parseFloat(update.gasPrice) / 1000000000 +
           " gwei",
       );
+
     }
   },
-);
+  );
 };
 
 // Function to approve Selected Token for Transfer by Seller
 const approve = async () => {
 const targetToken = newToken; 
-readContracts.nftContract = new ethers.Contract(nftContract, ERC721ABI, localProvider);
-writeContracts.nftContract = new ethers.Contract(nftContract, ERC721ABI, userSigner);
+readContracts.nftContractAddress = new ethers.Contract(nftContractAddress, ERC721ABI, localProvider);
+writeContracts.nftContractAddress = new ethers.Contract(nftContractAddress, ERC721ABI, userSigner);
 
 const result = tx(
   writeContracts &&
-    writeContracts.nftContract &&
-    writeContracts.nftContract.approve(vfprotocolv0, targetToken),
+    writeContracts.nftContractAddress &&
+    writeContracts.nftContractAddress.approve(vfprotocolv0, targetToken),
   update => {
     console.log("📡 Transaction Update:", update);
     if (update && (update.status === "confirmed" || update.status === 1)) {
@@ -484,11 +485,13 @@ const submitHandshake = async () => {
 const result = tx(
   writeContracts &&
     writeContracts.BasicSale &&
-    writeContracts.BasicSale.saleInit(buyer, dealPrice, nftContract,newToken),
+    writeContracts.BasicSale.saleInit(buyer, dealPrice, nftContractAddress,newToken),
   update => {
     console.log("📡 Transaction Update:", update);
   },
-);
+  // alert("Handshake Successfully Shook - Congrats!")
+  );
+  if(result) alert("Handshake Successfully Shook - Congrats!") 
 };
 
 // 3. This allows buyer to accept Handshake
@@ -772,7 +775,7 @@ const accept = async () => {
               </div>
               <div style={{ width: 640, margin: "auto", marginTop: 100, paddingBottom: 120 }}>
         <Address
-          address={nftContract}
+          address={nftContractAddress}
           ensProvider={mainnetProvider}
           blockExplorer={blockExplorer}
           fontSize={16}/>
