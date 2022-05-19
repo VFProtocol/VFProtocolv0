@@ -43,15 +43,10 @@ import { Home, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 
-// TODO: Make hardcoded payment value dynamic and responsive!!
-// Static Var for Testing
-// const escrowAddr = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d";
-// const collectibleAddr = "";
-// const targetToken = 1;
-// End Static Var for Testing
-// Dynamic Var Test
-// const escrowAddr = useContractReader(readContracts, "BasicSale", "address");
 
+// TODO LIST
+// 1. Draw out app "zones" - constants, functions, components, etc
+// Search TODO for more embedded in app
 
 const { BufferList } = require("bl");
 const ipfsAPI = require("ipfs-http-client");
@@ -100,7 +95,8 @@ const STARTING_JSON = {
   ],
 };
 
-// helper function to "Get" from IPFS
+// TODO: Add to helper function files
+// helper function to "Get" from IPFS 
 // you usually go content.toString() after this...
 const getFromIPFS = async hashToGet => {
   for await (const file of ipfs.get(hashToGet)) {
@@ -160,15 +156,15 @@ function App(props) {
     }, 1);
   };
 
+
+  // TODO: REMOVE FROM MVP VERSION - THIS IS THE EXAMPLE SECTION
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
-
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET);
   const userSigner = userProviderAndSigner.signer;
-
   useEffect(() => {
     async function getAddress() {
       if (userSigner) {
@@ -178,98 +174,29 @@ function App(props) {
     }
     getAddress();
   }, [userSigner]);
-
   // You can warn the user if you would like them to be on a specific network
   const localChainId = localProvider && localProvider._network && localProvider._network.chainId;
   const selectedChainId =
     userSigner && userSigner.provider && userSigner.provider._network && userSigner.provider._network.chainId;
-
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
-
   // The transactor wraps transactions and provides notificiations
   const tx = Transactor(userSigner, gasPrice);
-
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
   const yourLocalBalance = useBalance(localProvider, address);
-
   // Just plug in different 🛰 providers to get your balance on different chains:
   const yourMainnetBalance = useBalance(mainnetProvider, address);
-
   // const contractConfig = useContractConfig();
-
   const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
-
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
   const writeContracts = useContractLoader(userSigner, contractConfig, localChainId);
 
-  // EXTERNAL CONTRACT EXAMPLE:
-  //
-  // If you want to bring in the mainnet DAI contract it would look like:
-  const mainnetContracts = useContractLoader(mainnetProvider, contractConfig);
+  // TODO: Organize all contract variable calls into one spot
+  // This function let's you keep track of a variable from the contract in the local React state:
+  // const purpose = useContractReader(readContracts, "BasicSale", "purpose");
 
-  // If you want to call a function on a new block
-  useOnBlock(mainnetProvider, () => {
-    console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
-  });
-
-  // Then read your DAI balance like:
-  const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
-    "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-  ]);
-
-  // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts, "BasicSale", "purpose");
-
-
-
-  
-  /*
-  const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
-  console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
-  */
-
-  //
-  // 🧫 DEBUG 👨🏻‍🔬
-  //
-  useEffect(() => {
-    if (
-      DEBUG &&
-      mainnetProvider &&
-      address &&
-      selectedChainId &&
-      yourLocalBalance &&
-      yourMainnetBalance &&
-      readContracts &&
-      writeContracts &&
-      mainnetContracts
-    ) {
-      console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
-      console.log("🌎 mainnetProvider", mainnetProvider);
-      console.log("🏠 localChainId", localChainId);
-      console.log("👩‍💼 selected address:", address);
-      console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
-      console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
-      console.log("💵 yourMainnetBalance", yourMainnetBalance ? ethers.utils.formatEther(yourMainnetBalance) : "...");
-      console.log("📝 readContracts", readContracts);
-      console.log("🌍 DAI contract on mainnet:", mainnetContracts);
-      console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
-      console.log("🔐 writeContracts", writeContracts);
-    }
-  }, [
-    mainnetProvider,
-    address,
-    selectedChainId,
-    yourLocalBalance,
-    yourMainnetBalance,
-    readContracts,
-    writeContracts,
-    mainnetContracts,
-    localChainId,
-    myMainnetDAIBalance,
-  ]);
 
   const loadWeb3Modal = useCallback(async () => {
     const provider = await web3Modal.connect();
@@ -302,12 +229,15 @@ function App(props) {
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
 
   
-// START YOUR COLLECTIBLES STUFF
+
+  // START YOUR COLLECTIBLES STUFF
+  // TODO: Substitute in NFT API Stuff in order to interact with this contract
 const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
-const escrowAddr = readContracts?.BasicSale?.address; //TODO: THIS IS HOW YOU GET THE MAIN CONTRACT ADDRESS
+const vfprotocolv0 = readContracts?.BasicSale?.address; //TODO: THIS IS HOW YOU GET THE MAIN CONTRACT ADDRESS
 console.log("🤗 balance:", balance);
 
 // 📟 Listen for broadcast events
+// TODO: UPDATE WITH SUBGRAPH STUFF
 const transferEvents = useEventListener(readContracts, "YourCollectible", "Transfer", localProvider, 1);
 console.log("📟 Transfer events:", transferEvents);
 
@@ -319,22 +249,16 @@ const buyEvents = useEventListener(readContracts, "BasicSale", "BuyInit", localP
 // 🧠 This effect will update yourCollectibles by polling when your balance changes
 //
 const yourBalance = balance && balance.toNumber && balance.toNumber();
-const [yourJSON, setYourJSON] = useState(STARTING_JSON);
-const [sending, setSending] = useState();
-const [ipfsHash, setIpfsHash] = useState();
-const [ipfsDownHash, setIpfsDownHash] = useState();
-const [downloading, setDownloading] = useState();
-const [ipfsContent, setIpfsContent] = useState();
 const [yourCollectibles, setYourCollectibles] = useState();
 const [minting, setMinting] = useState(false);
 const [approving, setApproving] = useState(false);
 const [moving, setMoving] = useState(false);
 const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
-const [toAddress, setToAddress] = useState();
+const [nftContractAddress, setnftContractAddress] = useState("0xNFTContractAddressGoesHere");
 const [newToken, setNewToken] = useState();
-const [buyer, setBuyer] = useState();
-const [dealPrice, setPrice] = useState(1000); //Need to adjust state so it can receive inputs
+const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
+const [dealPrice, setPrice] = useState(); //Need to adjust state so it can receive inputs
 const [nftContract, setnftContract] = useState();
 const [tokenId2, setTokenId2] = useState();
 const [index,setIndex] = useState();
@@ -525,18 +449,16 @@ const result = tx(
 );
 };
 
-
+// Function to approve Selected Token for Transfer by Seller
 const approve = async () => {
-// upload to ipfs
-const approvedAddress = escrowAddr;
 const targetToken = newToken; 
-readContracts.toAddress = new ethers.Contract(toAddress, ERC721ABI, localProvider);
-writeContracts.toAddress = new ethers.Contract(toAddress, ERC721ABI, userSigner);
+readContracts.nftContract = new ethers.Contract(nftContract, ERC721ABI, localProvider);
+writeContracts.nftContract = new ethers.Contract(nftContract, ERC721ABI, userSigner);
 
 const result = tx(
   writeContracts &&
-    writeContracts.toAddress &&
-    writeContracts.toAddress.approve(escrowAddr, targetToken),
+    writeContracts.nftContract &&
+    writeContracts.nftContract.approve(vfprotocolv0, targetToken),
   update => {
     console.log("📡 Transaction Update:", update);
     if (update && (update.status === "confirmed" || update.status === 1)) {
@@ -555,23 +477,23 @@ const result = tx(
 );
 };
 
-const moveNFT = async () => {
-// const tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-// const buyer = setBuyer;
-// const price = setPrice;
-// const nftContract = setnftContract;
-// const tokenId2 = settokenId;
+// 2. This submits the Handshake to VFProtocolv0 contract
+// with Buyer, Price, NFT Contract Address, Token ID as inputs
+// These inputs are stored in a mapping in VFProtocolv0 
+const submitHandshake = async () => {
 const result = tx(
   writeContracts &&
     writeContracts.BasicSale &&
-    writeContracts.BasicSale.saleInit(buyer, dealPrice, toAddress,newToken),
+    writeContracts.BasicSale.saleInit(buyer, dealPrice, nftContract,newToken),
   update => {
     console.log("📡 Transaction Update:", update);
   },
 );
 };
 
-// THIS ONE HAS A HARDCODED PAYMENT VALUE
+// 3. This allows buyer to accept Handshake
+// It takes index of transaction and payment value as inputs 
+// These will be autofilled in MVP from reading contract subgraph 
 const accept = async () => {
   const result = tx(
     writeContracts &&
@@ -585,12 +507,10 @@ const accept = async () => {
 // END YOUR NFT COLLECTIBLES STUFF (until the actual app)
 
 
-
-
-
+// This is where everything renders
   return (
     <div className="App">
-      {/* ✏️ Edit the header and change the title to your project name */}
+      {/* ✏️ Edit the header component and change the title to your project name */}
       <Header />
       <NetworkDisplay
         NETWORKCHECK={NETWORKCHECK}
@@ -651,14 +571,14 @@ const accept = async () => {
                 autoFocus
                 ensProvider={mainnetProvider}
                 placeholder="Enter address"
-                value={toAddress}
-                onChange={setToAddress}
+                value={nftContractAddress}
+                onChange={setnftContractAddress}
               />
           <Input
             onChange={e => {
               setNewToken(e.target.value);
             }}
-            placeholder="Enter Token ID"
+            placeholder="Enter NFT Token ID"
           />
           <Button
             style={{ marginTop: 8 }}
@@ -669,7 +589,7 @@ const accept = async () => {
               approve();
             }}
           >
-            Approve NEW
+            Approve VFP Contract
           </Button>
         </div>
             </div>
@@ -694,7 +614,7 @@ const accept = async () => {
                 shape="round"
                 size="large"
                 onClick={() => {
-                  moveNFT(); 
+                  submitHandshake(); 
                 }}
               >
                 Create Handshake
@@ -809,8 +729,8 @@ const accept = async () => {
                 autoFocus
                 ensProvider={mainnetProvider}
                 placeholder="Enter Buyer address"
-                value={toAddress}
-                onChange={setToAddress}
+                value={buyer}
+                onChange={setBuyer}
               />
           <Input
             onChange={e => {
@@ -833,14 +753,43 @@ const accept = async () => {
           </div>
         </Route>
         <Route exact path="/mvpconfirm">
+        <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+}}>
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 120 }}>
+        <Row>
+            <Col>
+            </Col>
+            <Col >
+            <NFTcard />
+            </Col>
+            <Col >
+            </Col>
+          </Row>
+              </div>
+              <div style={{ width: 640, margin: "auto", marginTop: 100, paddingBottom: 120 }}>
         <Address
-          address={toAddress}
+          address={nftContract}
           ensProvider={mainnetProvider}
           blockExplorer={blockExplorer}
           fontSize={16}/>
-
+      </div>
       <Statistic title="Sale price" value={dealPrice} />
-
+        <Button
+                  disabled={moving}
+                  shape="round"
+                  size="large"
+                  onClick={() => {
+                    submitHandshake(); 
+                  }}
+                >
+                  Create Handshake
+                </Button>
+                </div>
+            </div>
         </Route>
           <Route exact path="/debug">
           {/*
