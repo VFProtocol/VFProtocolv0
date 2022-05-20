@@ -157,6 +157,12 @@ function App(props) {
   };
 
 
+  // If you want to call a function on a new block
+  useOnBlock(mainnetProvider, () => {
+    console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
+  });
+
+
   // TODO: REMOVE FROM MVP VERSION - THIS IS THE EXAMPLE SECTION
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
