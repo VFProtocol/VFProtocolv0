@@ -1,6 +1,7 @@
 import React from "react";
-import { Badge, Button, Card, List, Typography } from "antd";
+import { Avatar, Badge, Button, Card, Divider, List, Typography } from "antd";
 import NFTcard from "./NFTcard";
+import { Token } from "graphql";
 /**
   ~ What it does? ~
 
@@ -29,6 +30,7 @@ const gridStyle = {
     textAlign: 'center',
   };
   
+const { data1, onChange } = props;  
 const onClick = () => console.log("Works!");
 const { Text, Title } = Typography;
 const { Meta } = Card;
@@ -43,24 +45,78 @@ const data =
     Tokenid: "123",
   }
 
+  // const data1 = 
+  // [{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "120",
+  // }  ,{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "121",
+  // },{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "122",
+  // },{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "123",
+  // },{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "123",
+  // },{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "123",
+  // },{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "123",
+  // },{
+  //   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+  //   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+  //   Title: "mfer",
+  //   Tokenid: "123",
+  // }]
 
 
   return (
       <>
-      {NFTcard}
-      <Card title={<Title level={2}>Select NFT</Title>}>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard()}</Card.Grid>
-    </Card>
+      {/* Static Grid - Use only for style reference */}
+      {/* <Card title={<Title level={2}>Select NFT</Title>}>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+        <Card.Grid classname={NFTcard} style={gridStyle}>{NFTcard(data)}</Card.Grid>
+    </Card> */}
     
-  </>
+    <Divider orientation="left">Select NFT to Sell</Divider>
+    <List
+    itemLayout="horizontal"
+    dataSource={data1}
+    grid = {4}
+    renderItem={(item) => (
+      <List.Item>
+      <Card><Card.Grid style={gridStyle}>{NFTcard(item)}</Card.Grid>
+        </Card>    
+      </List.Item>
+    )}
+  />
+   </>
   );
 }
 

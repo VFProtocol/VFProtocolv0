@@ -42,6 +42,50 @@ import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
+//PROP TESTING AREA
+const data1 = 
+  [{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "120",
+  }  ,{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "121",
+  },{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "122",
+  },{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "123",
+  },{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "123",
+  },{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "123",
+  },{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "123",
+  },{
+    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+    Title: "mfer",
+    Tokenid: "123",
+  }]
+// END PROP TESTING AREA
 
 
 // TODO LIST
@@ -731,7 +775,8 @@ const accept = async () => {
           </Route> 
           <Route exact path="/mvp">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-          <NFTcardGrid />
+          <NFTcardGrid
+          data1={data1} />
         </div>
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 320 }}>
         <AddressInput
