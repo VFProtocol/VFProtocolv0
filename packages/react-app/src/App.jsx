@@ -85,6 +85,22 @@ const data1 =
     Title: "mfer",
     Tokenid: "123",
   }]
+
+  var myHeaders = new Headers();
+myHeaders.append("X-API-Key", "vf-protocol-24718e04");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+  
 // END PROP TESTING AREA
 
 

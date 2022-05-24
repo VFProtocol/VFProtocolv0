@@ -30,7 +30,7 @@ const gridStyle = {
     textAlign: 'center',
   };
   
-const { data1, onChange } = props;  
+const { data1 } = props;  
 const onClick = () => console.log("Works!");
 const { Text, Title } = Typography;
 const { Meta } = Card;
