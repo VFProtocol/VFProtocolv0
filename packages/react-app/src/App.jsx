@@ -86,7 +86,7 @@ const data1 =
     Tokenid: "123",
   }]
 
-  var myHeaders = new Headers();
+var myHeaders = new Headers();
 myHeaders.append("X-API-Key", "vf-protocol-24718e04");
 
 var requestOptions = {
@@ -95,12 +95,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
 
-  
 // END PROP TESTING AREA
 
 
@@ -181,6 +176,58 @@ const providers = [
 ];
 
 function App(props) {
+  // API TESTING
+  const [response, setResponse] = useState([]);
+  useEffect(() => {
+    const walletNFTs = test();
+    console.log("XXXXX",test(),walletNFTs);})
+    // for (i=0;i<walletNFTs.length;i++) {
+       
+    //     }
+    // }
+  // }, [])
+
+  useEffect(() => {
+    console.log(response)
+  },[])
+  const fetchWalletNFT=async()=>{
+    const response=await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
+    .then(response => response.json())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+    // setResponse(response.data);
+  } 
+
+  // Wallet NFT Call
+  async function test() {
+    const response = await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
+    const json = await response.json();
+    setResponse(json.items);
+    return json.items;
+  }
+
+  // NFT Metadata Call NEED TO LOOK UP WILDCARDS IN FETCH CALL
+  // async function test2(x,y) {
+  //   const response = await fetch("https://api.center.dev/v1/ethereum-mainnet/{x}/{y}", requestOptions)
+  //   , requestOptions)
+  //   const json = await response.json();
+  //   setResponse(json.items);
+  //   return json.items;
+  // }
+    
+
+
+
+  
+    // fetch("https://api.center.dev/v1/ethereum-mainnet/0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85/2242615251468547976329329144874074398612715712936200095430883468908103518792", requestOptions)
+    //   .then(response => response.text())
+    //   .then(result => console.log(result))
+    //   .catch(error => console.log('error', error));
+    // }, []);
+
+    // const walletNFTs = response[0];
+    // console.log("RIGHT HERE",walletNFTs);
+  // END API TESTING
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [initialNetwork.name, "mainnet", "rinkeby"];
