@@ -176,35 +176,35 @@ const providers = [
 ];
 
 function App(props) {
-  // API TESTING
-  const [response, setResponse] = useState([]);
-  useEffect(() => {
-    const walletNFTs = test();
-    console.log("XXXXX",test(),walletNFTs);})
-    // for (i=0;i<walletNFTs.length;i++) {
+  // // API TESTING
+  // const [response, setResponse] = useState([]);
+  // useEffect(() => {
+  //   const walletNFTs = test();
+  //   console.log("XXXXX",test(),walletNFTs);})
+  //   // for (i=0;i<walletNFTs.length;i++) {
        
-    //     }
-    // }
-  // }, [])
+  //   //     }
+  //   // }
+  // // }, [])
 
-  useEffect(() => {
-    console.log(response)
-  },[])
-  const fetchWalletNFT=async()=>{
-    const response=await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
-    .then(response => response.json())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-    // setResponse(response.data);
-  } 
+  // useEffect(() => {
+  //   console.log(response)
+  // },[])
+  // const fetchWalletNFT=async()=>{
+  //   const response=await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
+  //   .then(response => response.json())
+  //   .then(result => console.log(result))
+  //   .catch(error => console.log('error', error));
+  //   // setResponse(response.data);
+  // } 
 
-  // Wallet NFT Call
-  async function test() {
-    const response = await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
-    const json = await response.json();
-    setResponse(json.items);
-    return json.items;
-  }
+  // // Wallet NFT Call
+  // async function test() {
+  //   const response = await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions)
+  //   const json = await response.json();
+  //   setResponse(json.items);
+  //   return json.items;
+  // }
 
   // NFT Metadata Call NEED TO LOOK UP WILDCARDS IN FETCH CALL
   // async function test2(x,y) {
@@ -218,7 +218,7 @@ function App(props) {
 
 
 
-  
+
     // fetch("https://api.center.dev/v1/ethereum-mainnet/0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85/2242615251468547976329329144874074398612715712936200095430883468908103518792", requestOptions)
     //   .then(response => response.text())
     //   .then(result => console.log(result))
@@ -376,7 +376,7 @@ const [tokenId2, setTokenId2] = useState();
 const [index,setIndex] = useState();
 const [payment, setPayment] = useState(); //Need to adjust to accept other states
 const [accepting, setaccepting] = useState(false);
-const [canceling, setCanceling] = useState(false);
+const [canceling, setCanceling] = useState(false); //Check on this. I don't think it does anything
 
 
 useEffect(() => {
@@ -620,7 +620,27 @@ const accept = async () => {
     },
   );
   };
-// END YOUR NFT COLLECTIBLES STUFF (until the actual app)
+
+// 4. This lets the seller withdraw their funds after they sell something.
+// They can also check their balance with this widget (not yet). Need to update this with persistent state
+// for each user.
+
+const withdrawFunds = async () => {
+  const result = tx(
+    writeContracts &&
+      writeContracts.BasicSale &&
+      writeContracts.BasicSale.withdraw(),
+    update => {
+      console.log("📡 Transaction Update:", update);
+    },
+    // alert("Handshake Successfully Shook - Congrats!")
+    );
+    if(result) alert("ETH Withdrawn - Congrats!") 
+  };
+
+
+  // END YOUR NFT COLLECTIBLES STUFF (until the actual app)
+
 
 
 // This is where everything renders
@@ -763,6 +783,18 @@ const accept = async () => {
           >
             Accept Handshake!
           </Button>
+        </div>
+        <div>
+        <Button
+                disabled={moving}
+                shape="round"
+                size="large"
+                onClick={() => {
+                  withdrawFunds(); 
+                }}
+              >
+                Withdraw Funds
+              </Button>
         </div>
             </div>
 

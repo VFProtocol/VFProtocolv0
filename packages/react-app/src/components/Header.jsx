@@ -16,5 +16,4 @@ export default function Header({ link, title, subTitle }) {
 Header.defaultProps = {
   link: "https://twitter.com/Frozenfire42",
   title: "🎉 VF Protocol",
-  subTitle: "It's a very fun protocol",
 };

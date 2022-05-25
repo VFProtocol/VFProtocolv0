@@ -171,15 +171,13 @@ contract BasicSale is ReentrancyGuard, Pausable {
   }
 
 // Withdraw function for sellers to receive their payments. Seller submits index of ANY transaction on which they are seller, then runs checks and allow withdrawals
-  function withdraw(uint _index) external nonReentrant() whenNotPaused() {
-    require(_index<index,"Index out of bounds"); //Check if index exists
-    require(sales[_index].seller==msg.sender || owner==msg.sender,"Not authorized seller or owner"); //Check if withdrawer is authorized seller or owner
+  function withdraw() external nonReentrant() whenNotPaused() {
     require(balances[msg.sender]>0,"No balance to withdraw"); //Checks if msg.sender has a balance
     uint withdrawAmount = balances[msg.sender]; //Locks withdraw amount
     balances[msg.sender] = 0; //Resets balance (Checks - Effects - Transfers pattern)
     (bool sent, bytes memory data) = payable(msg.sender).call{value: withdrawAmount}(""); //Sends ETH balance to seller
         require(sent, "Failed to send Ether"); //Reverts if it fails
-    
+    emit Withdrawals(msg.sender, withdrawAmount);
   }
 
   // Cancel function allows a seller to cancel handshake
