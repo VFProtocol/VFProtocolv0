@@ -85,14 +85,7 @@ const data1 =
     Title: "mfer",
     Tokenid: "127",
   }]
-  // data1[0].selection = true;
-  // data1[1].selection = false;
-  // data1[2].selection = false;
-  // data1[3].selection = false;
-  // data1[4].selection = false;
-  // data1[5].selection = true;
-  // data1[6].selection = false;
-  // data1[7].selection = false;
+
 // Function to add selection property to each object
 for (let i=0;i<data1.length;i++) {
   data1[i].selection = false;
