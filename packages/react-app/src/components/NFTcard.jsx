@@ -55,7 +55,6 @@ if (cardData.selection==true) {
   return (
     <>
      <Card
-      // style={{ width: 150, height:150 }}
       hoverable
       cover={
         <img
