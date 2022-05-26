@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge, Button, Card, List, Typography } from "antd";
+import { Badge, Card, Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
 import {
   ClockCircleOutlined
@@ -29,7 +29,6 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Selected"
 const collectionLink = "https://opensea.io/collection/boredapeyachtclub";
-// const selector = false;
 console.log(cardData);
 
 if (cardData.selection==true) {
