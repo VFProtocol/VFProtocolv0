@@ -24,35 +24,56 @@ import {
 **/
 
 export default function NFTcard(props) {
-  // 📟 Listen for broadcast events
-// const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
-const onClick = () => console.log("Works!");
+const {cardData} = props;  
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Selected"
+const collectionLink = "https://opensea.io/collection/boredapeyachtclub";
+// const selector = false;
+console.log(cardData);
 
-
-
-
+if (cardData.selection==true) {
   return (
-      <>
-    <Badge.Ribbon text={labelId} placement="start">
-       <Card
-        style={{ width: 150, height:150 }}
-        cover={
-          <img
-            alt="example"
-            src={props.imageURL}
-          />
-        }
-      >
-        <Meta
-          title={<Text><a href="https://opensea.io/collection/boredapeyachtclub">{props.Title}</a> - {props.Tokenid}</Text>}
+    <>
+  <Badge.Ribbon text={labelId} placement="start">
+     <Card
+      hoverable
+      cover={
+        <img
+          alt="NFT"
+          src={cardData.imageURL}
         />
-      </Card>
-    </Badge.Ribbon>
-  </>
-  );
+      }
+    >
+      <Meta
+        title={<Text><a href={collectionLink}>{cardData.Title}</a> - {cardData.Tokenid}</Text>}
+      />
+    </Card>
+  </Badge.Ribbon>
+</>
+);
+} else {
+  return (
+    <>
+     <Card
+      // style={{ width: 150, height:150 }}
+      hoverable
+      cover={
+        <img
+          alt="NFT"
+          src={cardData.imageURL}
+        />
+      }
+    >
+      <Meta
+        title={<Text><a href={collectionLink}>{cardData.Title}</a> - {cardData.Tokenid}</Text>}
+      />
+    </Card>
+</>
+);
+}
+
+  
 }
 
 

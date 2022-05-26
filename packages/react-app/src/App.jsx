@@ -68,23 +68,36 @@ const data1 =
     collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
     imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
     Title: "mfer",
-    Tokenid: "123",
+    Tokenid: "124",
   },{
     collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
     imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
     Title: "mfer",
-    Tokenid: "123",
+    Tokenid: "125",
   },{
     collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
     imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
     Title: "mfer",
-    Tokenid: "123",
+    Tokenid: "126",
   },{
     collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
     imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
     Title: "mfer",
-    Tokenid: "123",
+    Tokenid: "127",
   }]
+  // data1[0].selection = true;
+  // data1[1].selection = false;
+  // data1[2].selection = false;
+  // data1[3].selection = false;
+  // data1[4].selection = false;
+  // data1[5].selection = true;
+  // data1[6].selection = false;
+  // data1[7].selection = false;
+// Function to add selection property to each object
+for (let i=0;i<data1.length;i++) {
+  data1[i].selection = false;
+}
+  data1[5].selection = true;
 
 var myHeaders = new Headers();
 myHeaders.append("X-API-Key", "vf-protocol-24718e04");
