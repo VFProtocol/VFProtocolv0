@@ -97,7 +97,7 @@ const data1 =
 for (let i=0;i<data1.length;i++) {
   data1[i].selection = false;
 }
-  data1[5].selection = true;
+  data1[6].selection = true;
 
 var myHeaders = new Headers();
 myHeaders.append("X-API-Key", "vf-protocol-24718e04");

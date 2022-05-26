@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Avatar, Badge, Button, Card, Divider, List, Row, Col, Typography } from "antd";
 import NFTcard from "./NFTcard";
 import { Token } from "graphql";
@@ -24,19 +24,28 @@ export default function NFTcardGrid(props) {
   // 📟 Listen for broadcast events
 // const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
 
-const selector = [{selection:true}, {selection:false},{selection:false},{selection:false},{selection:false},{selection:false},{selection:false},{selection:false}]; 
-const { data1} = props;  
+const {data1} = props;  
 const onClick = () => console.log("Works!");
 const { Text, Title } = Typography;
-const { Meta } = Card;
+const { Meta } = Card; 
 // Need to create loop where it receives data props and outputs each of the NFT images
 // with a scrollbar
+const [choice, setChoice] = useState();
+const select = (item) => {
+  for (let i=0;i<data1.length;i++) {
+    data1[i].selection = false;
+  };  
+  item.selection = !item.selection;
+  setChoice(item);
+  console.log("flipped value from ", item.Tokenid,!item.selection," to ", item.selection);
+}
 
 
 
   return (
       <>
       <Divider orientation="left">Select NFT to Sell</Divider>      
+      
         <List
                 grid={{
                   gutter: 16,
@@ -44,12 +53,15 @@ const { Meta } = Card;
                 }}
             dataSource={data1}
             renderItem={(item) => (
-              <List.Item>
+              
+              <List.Item onClick={()=> select(item)}>
               <NFTcard 
                 cardData={item}
               /> 
               </List.Item>
+            
             )}
+       
           />
       
     
