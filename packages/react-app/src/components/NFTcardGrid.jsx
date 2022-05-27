@@ -30,7 +30,21 @@ const { Text, Title } = Typography;
 const { Meta } = Card; 
 // Need to create loop where it receives data props and outputs each of the NFT images
 // with a scrollbar
+// API Request
+var myHeaders = new Headers();
+myHeaders.append("X-API-Key", "vf-protocol-24718e04");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+
+
+
 const [choice, setChoice] = useState();
+
 const select = (item) => {
   for (let i=0;i<data1.length;i++) {
     data1[i].selection = false;

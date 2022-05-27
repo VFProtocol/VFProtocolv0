@@ -92,14 +92,7 @@ for (let i=0;i<data1.length;i++) {
 }
   data1[6].selection = true;
 
-var myHeaders = new Headers();
-myHeaders.append("X-API-Key", "vf-protocol-24718e04");
 
-var requestOptions = {
-  method: 'GET',
-  headers: myHeaders,
-  redirect: 'follow'
-};
 
 
 // END PROP TESTING AREA
@@ -672,6 +665,9 @@ const withdrawFunds = async () => {
         <Menu.Item key="/mvpconfirm">
           <Link to="/mvpconfirm">MVP Confirmation Page</Link>
         </Menu.Item>
+        <Menu.Item key="/PendingOffers">
+          <Link to="/PendingOffers">Pending Offers</Link>
+        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>
@@ -945,6 +941,11 @@ const withdrawFunds = async () => {
                 </Button>
                 </div>
             </div>
+        </Route>
+        <Route exact path="/PendingOffers">
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+          <HCardBuyerList/>
+          </div>
         </Route>
           <Route exact path="/debug">
           {/*
