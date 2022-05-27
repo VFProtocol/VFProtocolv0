@@ -1,9 +1,7 @@
 import React from "react";
 import { Badge, Card, Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
-import {
-  ClockCircleOutlined
-} from "@ant-design/icons";
+
 
 /**
   ~ What it does? ~
