@@ -26,7 +26,7 @@ import {
 export default function HandshakeCardSeller(props) {
 const { Text, Title } = Typography;
 const { Meta } = Card;
-const labelId = "Awaiting Buyer Confirmation"
+const labelId = "Awaiting Buyer Acceptance"
 const data = 
   {
       collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
@@ -58,7 +58,7 @@ const data =
           ]}
         >
           <Meta
-            title={<Text><a href={data.collectionLink}>{data.Title}</a> - {data.Tokenid}</Text>}
+            title={<Text><a href={data.collection}>{data.Title}</a> - {data.Tokenid}</Text>}
             description={<List
                         size="small"
                         itemLayout="vertical"
@@ -71,36 +71,6 @@ const data =
           </Card>
       </Badge.Ribbon>
     </>
-      
-  //       extra={data.token}
-  //     >
-  //       <Meta
-  //         title={<a href="https://opensea.io/collection/boredapeyachtclub">NFT Project Name</a>}
-  //         description={<List
-  //           size="small"
-  //           itemLayout="vertical"
-  //           dataSource={data}
-  //           renderItem={(item) => (
-  //             <List.Item>
-  //               <List.Item.Meta
-  //                 title={<Text>Token ID: {item.token}</Text>}
-  //               />
-  //               <List.Item.Meta
-  //                 title={<Text>Buyer: {item.Buyer}</Text>}
-  //               />                
-  //               <List.Item.Meta
-  //               title={<Text>Price: {item.Price}</Text>}
-  //             />
-  //             <List.Item.Meta
-  //               title={<Text><Title level={2}>Time Left: <ClockCircleOutlined />{item.TimeLeft}</Title></Text>}
-  //               />
-  //             </List.Item>
-  //           )}
-  //         />}
-  //       />
-  //     </Card>
-  //   </Badge.Ribbon>
-  // </>
   );
 }
 
