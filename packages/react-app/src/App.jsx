@@ -30,6 +30,7 @@ import {
   HandshakeCardSeller,
   HandshakeCardBuyer,
   HCardBuyerList,
+  HCardSellerList,
   NFTcard,
   NFTcardGrid
 } from "./components";
@@ -668,6 +669,9 @@ const withdrawFunds = async () => {
         <Menu.Item key="/PendingOffers">
           <Link to="/PendingOffers">Pending Offers</Link>
         </Menu.Item>
+        <Menu.Item key="/PendingSales">
+          <Link to="/PendingSales">Pending Sales</Link>
+        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>
@@ -946,6 +950,12 @@ const withdrawFunds = async () => {
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
           <HCardBuyerList/>
           </div>
+          </Route>
+          <Route exact path="/PendingSales">
+        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+          <HCardSellerList/>
+          </div>
+
         </Route>
           <Route exact path="/debug">
           {/*

@@ -23,7 +23,7 @@ import {
   Handshake({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock })
 **/
 
-export default function HandshakeCardSeller(props) {
+export default function HandshakeCardBuyer(props) {
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Awaiting Your Acceptance"

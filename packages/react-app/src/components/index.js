@@ -26,5 +26,6 @@ export { default as TokenSelect } from "./TokenSelect";
 export { default as HandshakeCardSeller } from "./HandshakeCardSeller";
 export { default as HandshakeCardBuyer } from "./HandshakeCardBuyer";
 export { default as HCardBuyerList } from "./HCardBuyerList";
+export { default as HCardSellerList } from "./HCardSellerList";
 export { default as NFTcard } from "./NFTcard";
 export { default as NFTcardGrid } from "./NFTcardGrid";
