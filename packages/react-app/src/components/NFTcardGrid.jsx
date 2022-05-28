@@ -40,11 +40,23 @@ var requestOptions = {
   redirect: 'follow'
 };
 
+// Add in fetch function #1 here
+
+// Add in fetch function #2 here
+
+// Set lists of state here for API call
+
+// Execute API Call #1 here w useEffect()
+
+// Manipulate data for call #2
+
+// Execute API Call #2 here
 
 
-
+// State for selecting individual NFTs
 const [choice, setChoice] = useState();
 
+// Function for unselecting everything else whenever users select NFT
 const select = (item) => {
   for (let i=0;i<data1.length;i++) {
     data1[i].selection = false;
