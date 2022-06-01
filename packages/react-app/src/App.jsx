@@ -32,7 +32,8 @@ import {
   HCardBuyerList,
   HCardSellerList,
   NFTcard,
-  NFTcardGrid
+  NFTcardGrid,
+  NFTConfirmationCard
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
@@ -93,7 +94,7 @@ for (let i=0;i<data1.length;i++) {
 }
   data1[6].selection = true;
 
-
+const data2 = data1[0];
 
 
 // END PROP TESTING AREA
@@ -908,30 +909,24 @@ const withdrawFunds = async () => {
           </div>
         </Route>
         <Route exact path="/mvpconfirm">
-        <div style={{
+        {/* <div style={{
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-}}>
-        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-        <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 120 }}>
+}}> */}
+        
+        <div style={{ width: 340, margin: "auto", marginTop: 32, paddingBottom: 120 }}>
         <Row>
             <Col>
             </Col>
             <Col >
-            <NFTcard />
+            <NFTConfirmationCard/>
             </Col>
             <Col >
             </Col>
           </Row>
               </div>
-              <div style={{ width: 640, margin: "auto", marginTop: 100, paddingBottom: 120 }}>
-        <Address
-          address={nftContractAddress}
-          ensProvider={mainnetProvider}
-          blockExplorer={blockExplorer}
-          fontSize={16}/>
-      </div>
+      {/* <div>
       <Statistic title="Sale price" value={dealPrice} />
         <Button
                   disabled={moving}
@@ -943,8 +938,9 @@ const withdrawFunds = async () => {
                 >
                   Create Handshake
                 </Button>
-                </div>
-            </div>
+                </div> */}
+              
+             {/* {/* </div> */}
         </Route>
         <Route exact path="/PendingOffers">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>

@@ -29,3 +29,4 @@ export { default as HCardBuyerList } from "./HCardBuyerList";
 export { default as HCardSellerList } from "./HCardSellerList";
 export { default as NFTcard } from "./NFTcard";
 export { default as NFTcardGrid } from "./NFTcardGrid";
+export { default as NFTConfirmationCard } from "./NFTConfirmationCard";
