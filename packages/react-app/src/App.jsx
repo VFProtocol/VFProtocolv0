@@ -320,10 +320,9 @@ const [transferToAddresses, setTransferToAddresses] = useState({});
 const [nftContractAddress, setnftContractAddress] = useState("0xNFTContractAddressGoesHere");
 const [newToken, setNewToken] = useState();
 const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
-const [dealPrice, setPrice] = useState(); //Need to adjust state so it can receive inputs
-const [tokenId2, setTokenId2] = useState();
-const [index,setIndex] = useState();
-const [payment, setPayment] = useState(); //Need to adjust to accept other states
+const [dealPrice, setPrice] = useState(); //This sets the seller's price
+const [index,setIndex] = useState(); //This sets the Buyer's index to accept <- Need to pass this in automatically somehow
+const [payment, setPayment] = useState(); //This sets the Buyer's Price
 const [accepting, setaccepting] = useState(false);
 const [canceling, setCanceling] = useState(false); //Check on this. I don't think it does anything
 
