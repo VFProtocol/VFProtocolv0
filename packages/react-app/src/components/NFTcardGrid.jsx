@@ -47,7 +47,7 @@ var requestOptions = {
 
   useEffect(() => {
     const getData = async () => {
-      let resp = await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0xFba8A2Fa05E0ee39b6e3C584A0f7ce397Cc92aF0/assets-owned?limit=100", requestOptions);
+      let resp = await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0x19ce57B670121E73E43be6c2Fea5C254bb4C8760/assets-owned?limit=100", requestOptions);
       let json = await resp.json()
       updatenftData(json.items);
       updateapiState("walletSuccess");

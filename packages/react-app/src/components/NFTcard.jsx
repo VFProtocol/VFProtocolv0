@@ -27,7 +27,6 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Selected"
 const collectionLink = cardData.url;
-console.log(cardData);
 
 if (cardData.selection==true) {
   return (
