@@ -26,7 +26,7 @@ const {cardData} = props;
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Selected"
-const collectionLink = "https://opensea.io/collection/boredapeyachtclub";
+const collectionLink = cardData.url;
 console.log(cardData);
 
 if (cardData.selection==true) {
@@ -38,12 +38,12 @@ if (cardData.selection==true) {
       cover={
         <img
           alt="NFT"
-          src={cardData.imageURL}
+          src={cardData.small_preview_image_url}
         />
       }
     >
       <Meta
-        title={<Text><a href={collectionLink}>{cardData.Title}</a> - {cardData.Tokenid}</Text>}
+        title={<Text><a href={collectionLink}>{cardData.collection_name}</a> - {cardData.token_id}</Text>}
       />
     </Card>
   </Badge.Ribbon>
@@ -57,12 +57,12 @@ if (cardData.selection==true) {
       cover={
         <img
           alt="NFT"
-          src={cardData.imageURL}
+          src={cardData.small_preview_image_url}
         />
       }
     >
       <Meta
-        title={<Text><a href={collectionLink}>{cardData.Title}</a> - {cardData.Tokenid}</Text>}
+        title={<Text><a href={collectionLink}>{cardData.collection_name}</a> - {cardData.token_id}</Text>}
       />
     </Card>
 </>

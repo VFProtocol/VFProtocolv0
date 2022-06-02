@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Avatar, Badge, Button, Card, Divider, List, Row, Col, Typography } from "antd";
 import NFTcard from "./NFTcard";
 import { Token } from "graphql";
+import { useCallback } from "react";
 /**
   ~ What it does? ~
 
@@ -40,17 +41,38 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-// Add in fetch function #1 here
+  const [nftData, updatenftData] = useState();
+  const [apiState, updateapiState] = useState("init");
+  const [renderNFT, updaterenderNFT] = useState([]);
 
-// Add in fetch function #2 here
+  useEffect(() => {
+    const getData = async () => {
+      let resp = await fetch("https://api.center.dev/v1/ethereum-mainnet/account/0xFba8A2Fa05E0ee39b6e3C584A0f7ce397Cc92aF0/assets-owned?limit=100", requestOptions);
+      let json = await resp.json()
+      updatenftData(json.items);
+      updateapiState("walletSuccess");
+    }
+    const getRender = async () => {
+      let nftTemp = [];
+      for (let i=0;i<nftData.length;i++) {
+      let tempAddress = nftData[i].address;
+      let tempTokenId = nftData[i].tokenId;
+      let resp = await fetch(`https://api.center.dev/v1/ethereum-mainnet/${tempAddress}/${tempTokenId}`, requestOptions)
+      let json = await resp.json()
+      nftTemp.push(json);
+      }
+      updaterenderNFT(nftTemp);
+      updateapiState("NftDataSuccess");
 
-// Set lists of state here for API call
+    } 
+    if (apiState=="init") {
+    getData();
+    }
+    else if (apiState=="walletSuccess") {
+      getRender();
+    }
+  }, [requestOptions]);
 
-// Execute API Call #1 here w useEffect()
-
-// Manipulate data for call #2
-
-// Execute API Call #2 here
 
 
 // State for selecting individual NFTs
@@ -63,8 +85,7 @@ const select = (item) => {
   };  
   item.selection = !item.selection;
   setChoice(item);
-  console.log("flipped value from ", item.Tokenid,!item.selection," to ", item.selection);
-}
+  }
 
 
 
@@ -77,7 +98,7 @@ const select = (item) => {
                   gutter: 16,
                   column: 4,
                 }}
-            dataSource={data1}
+            dataSource={renderNFT}
             renderItem={(item) => (
               
               <List.Item onClick={()=> select(item)}>
