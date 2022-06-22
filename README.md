@@ -1,3 +1,9 @@
+VF Protocol V0
+
+
+
+
+OLD HOW TO USE SCAFFOLD ETH - This sets it all up for you.
 # 🏗 Scaffold-ETH
 
 > everything you need to build on Ethereum! 🚀
