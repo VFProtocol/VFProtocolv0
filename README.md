@@ -1,7 +1,46 @@
 VF Protocol V0
 
+# Initial onboarding experience
 
+## Getting Started 
+```bash
+git clone https://github.com/CamArmstr/6MaySwapPlay.git
+```
+### Install dependencies
+```bash
+npm install
+```
 
+### Running required services
+> install and start your 👷‍ Hardhat chain:
+
+```bash
+cd 6MaySwapPlay
+yarn install
+yarn chain
+```
+
+> in a second terminal window, start your 📱 frontend:
+
+```bash
+cd 6MaySwapPlay
+yarn start
+```
+
+> in a third terminal window, 🛰 deploy your contract:
+
+```bash
+cd 6MaySwapPlay
+yarn deploy
+```
+
+### Observations
+- both a package-lock.json & a yarn.lock.
+
+- yarn install fails out with an error against https://github.com/hugomrdias/ndjson 
+    - npm install does not fail out.
+
+- Upon providing a value of `424580648.96` to the `Set Price` field when creating a handshake, a `success` toast message is shown preemptively. Immediately after this success toast is shown, another toast indicating a `big number ...` error pops up.
 
 OLD HOW TO USE SCAFFOLD ETH - This sets it all up for you.
 # 🏗 Scaffold-ETH
