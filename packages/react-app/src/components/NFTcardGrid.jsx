@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Avatar, Badge, Button, Card, Divider, List, Row, Col, Typography } from "antd";
+import { Avatar, Badge, Button, Card, Divider, List, Row, Col, Typography, AutoComplete } from "antd";
 import NFTcard from "./NFTcard";
 import { Token } from "graphql";
 import { useCallback } from "react";
@@ -20,6 +20,7 @@ import { useCallback } from "react";
   />
   Handshake({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock })
 **/
+
 
 export default function NFTcardGrid(props) {
   // 📟 Listen for broadcast events
@@ -86,13 +87,13 @@ const select = (item) => {
   item.selection = !item.selection;
   setChoice(item);
   }
-
+  
 
 
   return (
       <>
       <Divider orientation="left">Select NFT to Sell</Divider>      
-      
+        <div style={{height: 300, overflowX: 'hidden', overflowY: 'auto' }}>
         <List
                 grid={{
                   gutter: 16,
@@ -111,7 +112,7 @@ const select = (item) => {
        
           />
       
-    
+      </div>
     
    </>
   );
