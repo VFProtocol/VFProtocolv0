@@ -39,63 +39,65 @@ const data =
       Seller: "Vitalik.ETH",
     Price: "2.5 ETH",
     TimeLeft: "32 Minutes"
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "120",
-    Seller: "Vitalik.ETH",
-  Price: "2.5 ETH",
-  TimeLeft: "32 Minutes"
-},{
-  collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-  imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-  Title: "mfer",
-  Tokenid: "120",
-  Seller: "Vitalik.ETH",
-Price: "2.5 ETH",
-TimeLeft: "32 Minutes"
-},{
-  collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-  imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-  Title: "mfer",
-  Tokenid: "120",
-  Seller: "Vitalik.ETH",
-Price: "2.5 ETH",
-TimeLeft: "32 Minutes"
-},{
-  collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-  imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-  Title: "mfer",
-  Tokenid: "120",
-  Seller: "Vitalik.ETH",
-Price: "2.5 ETH",
-TimeLeft: "32 Minutes"
-},{
-  collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-  imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-  Title: "mfer",
-  Tokenid: "120",
-  Seller: "Vitalik.ETH",
-Price: "2.5 ETH",
-TimeLeft: "32 Minutes"
-},{
-  collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-  imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-  Title: "mfer",
-  Tokenid: "120",
-  Seller: "Vitalik.ETH",
-Price: "2.5 ETH",
-TimeLeft: "32 Minutes"
-},{
-  collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-  imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-  Title: "mfer",
-  Tokenid: "120",
-  Seller: "Vitalik.ETH",
-Price: "2.5 ETH",
-TimeLeft: "32 Minutes"
-}]
+  }
+//   ,{
+//     collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//     imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//     Title: "mfer",
+//     Tokenid: "120",
+//     Seller: "Vitalik.ETH",
+//   Price: "2.5 ETH",
+//   TimeLeft: "32 Minutes"
+// },{
+//   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//   Title: "mfer",
+//   Tokenid: "120",
+//   Seller: "Vitalik.ETH",
+// Price: "2.5 ETH",
+// TimeLeft: "32 Minutes"
+// },{
+//   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//   Title: "mfer",
+//   Tokenid: "120",
+//   Seller: "Vitalik.ETH",
+// Price: "2.5 ETH",
+// TimeLeft: "32 Minutes"
+// },{
+//   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//   Title: "mfer",
+//   Tokenid: "120",
+//   Seller: "Vitalik.ETH",
+// Price: "2.5 ETH",
+// TimeLeft: "32 Minutes"
+// },{
+//   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//   Title: "mfer",
+//   Tokenid: "120",
+//   Seller: "Vitalik.ETH",
+// Price: "2.5 ETH",
+// TimeLeft: "32 Minutes"
+// },{
+//   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//   Title: "mfer",
+//   Tokenid: "120",
+//   Seller: "Vitalik.ETH",
+// Price: "2.5 ETH",
+// TimeLeft: "32 Minutes"
+// },{
+//   collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+//   imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+//   Title: "mfer",
+//   Tokenid: "120",
+//   Seller: "Vitalik.ETH",
+// Price: "2.5 ETH",
+// TimeLeft: "32 Minutes"
+// }
+]
 
 
 
