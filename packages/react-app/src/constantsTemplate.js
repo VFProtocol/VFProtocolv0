@@ -2,14 +2,12 @@
 export const INFURA_ID = "460f40a260564ac4a4f4b3fffb032dad";
 
 // MY ETHERSCAN_ID, SWAP IN YOURS FROM https://etherscan.io/myapikey
-export const ETHERSCAN_KEY = "TN2YVJI2BSGZS9Q2QY1AEQ676U1QDDE2FD"; //ACTUAL VALUE
+export const ETHERSCAN_KEY = "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
 
 // BLOCKNATIVE ID FOR Notify.js:
 export const BLOCKNATIVE_DAPPID = "0b58206a-f3c0-4701-a62f-73c7243e8c77";
 
-export const ALCHEMY_KEY = "ddo1jQt4E4fLdr6gCYdkUD5JeYMCc9g3"; //ACTUAL VALUE
-
-export const CENTER_API_KEY = "vf-protocol-24718e04"; //ACTUAL VALUE
+export const ALCHEMY_KEY = "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
 export const NETWORKS = {
   localhost: {

@@ -35,7 +35,7 @@ import {
   NFTcardGrid,
   NFTConfirmationCard
 } from "./components";
-import { NETWORKS, ALCHEMY_KEY } from "./constants";
+import { NETWORKS, ALCHEMY_KEY } from "./constantsTemplate";
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
@@ -43,6 +43,7 @@ import ERC721ABI from "./contracts/ABI/ERC721.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
+
 
 //PROP TESTING AREA
 const data1 = 
@@ -855,6 +856,7 @@ const withdrawFunds = async () => {
           >
             Review Handshake
           </Button>
+          
           </div>
         </Route>
         

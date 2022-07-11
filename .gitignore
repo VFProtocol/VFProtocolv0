@@ -1,6 +1,9 @@
 #ignore .env files
 .env
 
+# Ignore Constants file
+packages\react-app\src\constants.js
+
 packages/subgraph/generated
 packages/subgraph/abis/*
 packages/hardhat/*.txt

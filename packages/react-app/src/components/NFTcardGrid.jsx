@@ -3,6 +3,8 @@ import { Avatar, Badge, Button, Card, Divider, List, Row, Col, Typography, AutoC
 import NFTcard from "./NFTcard";
 import { Token } from "graphql";
 import { useCallback } from "react";
+import { CENTER_API_KEY } from "../constants"
+
 /**
   ~ What it does? ~
 
@@ -34,7 +36,7 @@ const { Meta } = Card;
 // with a scrollbar
 // API Request
 var myHeaders = new Headers();
-myHeaders.append("X-API-Key", "vf-protocol-24718e04");
+myHeaders.append("X-API-Key", "vf-protocol-24718e04"); //API Key in .env file
 
 var requestOptions = {
   method: 'GET',
