@@ -36,6 +36,7 @@ import {
   NFTConfirmationCard
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constantsTemplate";
+// import { NETWORKS, ALCHEMY_KEY } from "./constants"; constants w/ Production API Keys
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
