@@ -35,7 +35,7 @@ const data =
       Tokenid: "120",
       Buyer: "Vitalik.ETH",
     Price: "2.5 ETH",
-    TimeLeft: "32 Minutes"
+    TimeLeft: "60 Minutes"
   }
 
 

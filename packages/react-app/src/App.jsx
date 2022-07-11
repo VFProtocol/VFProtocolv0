@@ -608,23 +608,23 @@ const withdrawFunds = async () => {
         <Menu.Item key="/">
           <Link to="/">Create Handshakes</Link>
         </Menu.Item>
-        <Menu.Item key="/mvp">
-          <Link to="/mvp">MVP Lander</Link>
-        </Menu.Item>
-        <Menu.Item key="/mvpconfirm">
+        {/* <Menu.Item key="/ux">
+          <Link to="/ux">Create Handshakes</Link>
+        </Menu.Item> */}
+        {/* <Menu.Item key="/mvpconfirm">
           <Link to="/mvpconfirm">MVP Confirmation Page</Link>
+        </Menu.Item> */}
+        <Menu.Item key="/PendingSales">
+          <Link to="/PendingSales">Pending Sales</Link>
         </Menu.Item>
         <Menu.Item key="/PendingOffers">
           <Link to="/PendingOffers">Pending Offers</Link>
         </Menu.Item>
-        <Menu.Item key="/PendingSales">
-          <Link to="/PendingSales">Pending Sales</Link>
-        </Menu.Item>
-        <Menu.Item key="/debug">
+        {/* <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         {/* NFT PAGES */}
-        <Menu.Item key="/nft">
+        {/* <Menu.Item key="/nft">
           <Link to="/nft">NFT Panel</Link>
         </Menu.Item>
         <Menu.Item key="/transfers">
@@ -632,16 +632,16 @@ const withdrawFunds = async () => {
         </Menu.Item>
         <Menu.Item key="/transferspecial">
           <Link to="/transferspecial">Transfers Special</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         {/* End NFT Pages */}
-        <Menu.Item key="/subgraph">
+        {/* <Menu.Item key="/subgraph">
           <Link to="/subgraph">Subgraph</Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
 
       <Switch>
         {/* Begin NFT Pages */}
-        <Route exact path="/">
+        <Route exact path="/ux">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <Button
                 disabled={minting}
@@ -822,7 +822,7 @@ const withdrawFunds = async () => {
             <HCardBuyerList />
             </div>
           </Route> 
-          <Route exact path="/mvp">
+          <Route exact path="/">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
           <NFTcardGrid
           data1={data1} />
@@ -848,13 +848,16 @@ const withdrawFunds = async () => {
             shape="round"
             size="large"
             onClick={() => {
-              approve(); 
+              // approve();
+              window.location.href='/mvpconfirm'
             }}
+            
           >
             Review Handshake
           </Button>
           </div>
         </Route>
+        
         <Route exact path="/mvpconfirm">
         {/* <div style={{
     display: 'flex',

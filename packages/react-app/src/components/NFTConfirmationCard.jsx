@@ -35,7 +35,7 @@ const data =
       Tokenid: "120",
       Buyer: "Vitalik.ETH",
     Price: "2.5 ETH",
-    TimeLeft: "32 Minutes"
+    TimeLeft: "60 Minutes"
   }
 
 
@@ -53,7 +53,7 @@ const data =
           }
           actions={[
             <>
-            <Button type="primary" onClick={console.log("Click Confirm")} style={{ background: "green", borderColor: "green"}}>Submit Handshake</Button>
+            <a href="/PendingSales"><Button type="primary" onClick={()=>alert('Handshake Submitted Successfully!')} style={{ background: "green", borderColor: "green"}}>Submit Handshake</Button></a>
             <Button onClick={console.log("Click Reject")}>Edit</Button>
             </>
           ]}
