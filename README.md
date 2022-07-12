@@ -90,12 +90,6 @@ https://user-images.githubusercontent.com/52431864/178357716-00121b00-e2d4-42c0-
 
 Want to learn about Scaffold ETH? Visit: [docs.scaffoldeth.io](https://docs.scaffoldeth.io)
 
-## 💌 P.S.
 
-🌍 You need an RPC key for testnets and production deployments, create an [Alchemy](https://www.alchemy.com/) account and replace the value of `ALCHEMY_KEY = xxx` in `packages/react-app/src/constants.js` with your new key.
-
-📣 Make sure you update the `InfuraID` before you go to production. Huge thanks to [Infura](https://infura.io/) for our special account that fields 7m req/day!
-
-
-### Thanks for your time 
-### Please reach out to me, [Cameron](https://twitter.com/Frozenfire42), if you have any thoughts, questions, or if you want to help!
+### Thanks for your time. Seriously. I appreciate it! 
+### Please reach out to me, [Cameron](https://twitter.com/Frozenfire42), if you have any thoughts, questions, or if you want to help us make transaction fees extinct.
