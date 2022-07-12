@@ -75,6 +75,9 @@ https://user-images.githubusercontent.com/52431864/178357716-00121b00-e2d4-42c0-
 
 
 ### Current Known Issues
+- There's a lot. I (a not career dev) built this entirely from a new Scaffold ETH clone. If something looks dumb, its probably because it **is** dumb.
+- I'm open to any and all feedback. Now on to the known issues:
+ 
 - both a package-lock.json & a yarn.lock.
 
 - yarn install fails out with an error against https://github.com/hugomrdias/ndjson 
