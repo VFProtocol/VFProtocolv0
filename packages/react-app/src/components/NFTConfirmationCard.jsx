@@ -27,18 +27,19 @@ export default function NFTConfirmationCard(props) {
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Awaiting Your Confirmation"
+const jsonData = JSON.parse(localStorage.getItem('choice')); 
 const data = 
   {
-      collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-      imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-      Title: "mfer",
-      Tokenid: "120",
+      collection: jsonData.url,
+      imageURL: jsonData.small_preview_image_url,
+      Title: jsonData.collection_name,
+      Tokenid: jsonData.token_id,
       Buyer: JSON.parse(localStorage.getItem('buyer')),
     Price: JSON.parse(localStorage.getItem('dealPrice')),
     TimeLeft: "60 Minutes"
   }
 
-
+console.log(JSON.parse(localStorage.getItem('choice')));
 
 
   return (

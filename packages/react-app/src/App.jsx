@@ -834,8 +834,9 @@ const withdrawFunds = async () => {
           <Input
             onChange={e => {
               setPrice(e.target.value);
-              localStorage.setItem('dealPrice', JSON.stringify(dealPrice));
+              localStorage.setItem('dealPrice', JSON.stringify(e.target.value));
               console.log(dealPrice);
+              console.log(e.target.value);
               
             }}
             placeholder="Set Price"
