@@ -62,6 +62,7 @@ var requestOptions = {
       let tempTokenId = nftData[i].tokenId;
       let resp = await fetch(`https://api.center.dev/v1/ethereum-mainnet/${tempAddress}/${tempTokenId}`, requestOptions)
       let json = await resp.json()
+      console.log(json);
       nftTemp.push(json);
       }
       updaterenderNFT(nftTemp);
