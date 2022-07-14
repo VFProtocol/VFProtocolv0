@@ -33,7 +33,8 @@ import {
   HCardSellerList,
   NFTcard,
   NFTcardGrid,
-  NFTConfirmationCard
+  NFTConfirmationCard,
+  NFTExpiredCard
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constantsTemplate";
 // import { NETWORKS, ALCHEMY_KEY } from "./constants"; constants w/ Production API Keys
@@ -317,6 +318,9 @@ const [index,setIndex] = useState(); //This sets the Buyer's index to accept <- 
 const [payment, setPayment] = useState(); //This sets the Buyer's Price
 const [accepting, setaccepting] = useState(false);
 const [canceling, setCanceling] = useState(false); //Check on this. I don't think it does anything
+
+
+
 
 
 useEffect(() => {
@@ -830,6 +834,8 @@ const withdrawFunds = async () => {
           <Input
             onChange={e => {
               setPrice(e.target.value);
+              localStorage.setItem('dealPrice', JSON.stringify(dealPrice));
+              console.log(dealPrice);
               
             }}
             placeholder="Set Price"
@@ -866,6 +872,7 @@ const withdrawFunds = async () => {
             <NFTConfirmationCard/>
             </Col>
             <Col >
+            
             </Col>
           </Row>
               </div>

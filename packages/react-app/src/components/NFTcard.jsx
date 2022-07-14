@@ -27,7 +27,7 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Selected"
 const collectionLink = cardData.url;
-const demoImg = "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png"; 
+// const demoImg = "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png"; 
 // Fox = "https://cdn.center.app/1/0x55256178aFE74082c4f9aFEF7E40fec949c1b499/382/b85eed23f70a6775d38293f4327bcaf8dd9e506c911d8cfa066d6080b0097d4e.png";
 
 if (cardData.selection==true) {
@@ -39,8 +39,8 @@ if (cardData.selection==true) {
       cover={
         <img
           alt="NFT"
-          src = {demoImg}
-          // src={cardData.small_preview_image_url}
+          // src = {demoImg}
+          src={cardData.small_preview_image_url}
         />
       }
     >
@@ -59,8 +59,8 @@ if (cardData.selection==true) {
       cover={
         <img
           alt="NFT"
-          src = {demoImg}
-          // src={cardData.small_preview_image_url}
+          // src = {demoImg}
+          src={cardData.small_preview_image_url}
         />
       }
     >
