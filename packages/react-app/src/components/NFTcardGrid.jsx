@@ -62,7 +62,7 @@ var requestOptions = {
       let tempTokenId = nftData[i].tokenId;
       let resp = await fetch(`https://api.center.dev/v1/ethereum-mainnet/${tempAddress}/${tempTokenId}`, requestOptions)
       let json = await resp.json()
-      console.log(json);
+      // console.log(json);
       nftTemp.push(json);
       }
       updaterenderNFT(nftTemp);
@@ -82,7 +82,7 @@ var requestOptions = {
 // State and logging for selecting individual NFTs
 const [choice, setChoice] = useState();
 useEffect(() => {
-  console.log('A choice has been made', choice);
+  // console.log('A choice has been made', choice);
   localStorage.setItem('choice', JSON.stringify(choice));
 }, [choice])
 

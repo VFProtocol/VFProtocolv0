@@ -1,10 +1,10 @@
 import React from "react";
-import { Badge, Button, Card, List, Typography } from "antd";
+import { Anchor, Badge, Button, Card, List,  Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
 import {
   ClockCircleOutlined
 } from "@ant-design/icons";
-
+const {Link} = Anchor;
 /**
   ~ What it does? ~
 
@@ -29,7 +29,7 @@ const { Meta } = Card;
 const labelId = "Awaiting Your Confirmation"
 const jsonData = JSON.parse(localStorage.getItem('choice')); 
 const data = 
-  {
+  {   collectionAddress: jsonData.address,
       collection: jsonData.url,
       imageURL: jsonData.small_preview_image_url,
       Title: jsonData.collection_name,
@@ -38,8 +38,40 @@ const data =
     Price: JSON.parse(localStorage.getItem('dealPrice')),
     TimeLeft: "60 Minutes"
   }
-
+const buyerLink = "https://etherscan.io/address/"+data.Buyer;
 console.log(JSON.parse(localStorage.getItem('choice')));
+
+// API Call to record transaction in AWS
+var callAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) => {
+  // instantiate a headers object
+  var myHeaders = new Headers();
+  // add content type header to object
+  myHeaders.append("Content-Type", "application/json");
+  // using built in JSON utility package turn object to string and store in a variable
+  var raw = JSON.stringify(
+    {"TransactionID":2, //Need to get this from the blockchain
+  "nftCollectionAddress":collectionAddress,
+  "nftTokenID":TokenID,
+  "nftBuyer":nftBuyer,
+  "nftSeller":nftSeller,
+  "nftPrice":nftPrice});
+  // create a JSON object with parameters for API call and store in a variable
+  var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+  };
+  // make API call with parameters and use promises to get response
+  await fetch("https://omu0yb846i.execute-api.us-east-1.amazonaws.com/dev", requestOptions)
+  .then(response => response.text())
+  .then(result => alert(JSON.parse(result).body))
+  .catch(error => console.log('error', error));
+
+  window.location.href = "/PendingSales";
+}
+
+
 
 
   return (
@@ -54,8 +86,20 @@ console.log(JSON.parse(localStorage.getItem('choice')));
           }
           actions={[
             <>
-            <a href="/PendingSales"><Button type="primary" onClick={()=>alert('Handshake Submitted Successfully!')} style={{ background: "green", borderColor: "green"}}>Submit Handshake</Button></a>
-            <Button onClick={console.log("Click Reject")}>Edit</Button>
+            {/* <a href="/PendingSales"> */}
+              <Button type="primary" onClick={
+                ()=>{callAPI(data.collectionAddress,data.Tokenid,data.Buyer,data.Seller,data.Price);
+                
+
+                
+                }} 
+              style={{ background: "green", borderColor: "green"}}>
+                Submit Handshake</Button>
+                {/* </a> */}
+
+            <Button onClick={()=>{console.log("Click Edit");
+              window.location.href='/'}}>Edit Handshake</Button>
+            
             </>
           ]}
         >
@@ -66,7 +110,7 @@ console.log(JSON.parse(localStorage.getItem('choice')));
                         itemLayout="vertical"
                         >
                           <List.Item />
-                          <List.Item><Title level={3} strong>Buyer: {data.Buyer}</Title> </List.Item>
+                          <List.Item><Title level={3} strong>Buyer: <a href={buyerLink} target="_blank" rel="noopener noreferrer">{data.Buyer}</a></Title> </List.Item>
                           <List.Item><Title level={3} strong>Price: {data.Price} ETH</Title> </List.Item>                
                         </List>}
               />        
