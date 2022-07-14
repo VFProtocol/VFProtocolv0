@@ -1,5 +1,5 @@
 import { Badge, Input } from "antd";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { CameraOutlined, QrcodeOutlined } from "@ant-design/icons";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
@@ -39,6 +39,13 @@ export default function AddressInput(props) {
   const { ensProvider, onChange } = props;
   const [value, setValue] = useState(props.value);
   const [scan, setScan] = useState(false);
+
+  // Stores state for buyer value for confirmation card
+    useEffect(() => {
+      localStorage.setItem('buyer', JSON.stringify(value));
+      console.log(value);
+    }, [value]);
+
 
   const currentValue = typeof props.value !== "undefined" ? props.value : value;
   const ens = useLookupAddress(props.ensProvider, currentValue);

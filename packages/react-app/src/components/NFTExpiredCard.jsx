@@ -23,23 +23,22 @@ import {
   Handshake({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock })
 **/
 
-export default function NFTConfirmationCard(props) {
+export default function NFTExpiredCard(props) {
 const { Text, Title } = Typography;
 const { Meta } = Card;
-const labelId = "Awaiting Your Confirmation"
-const jsonData = JSON.parse(localStorage.getItem('choice')); 
+const labelId = "Handshake Expired"
 const data = 
   {
-      collection: jsonData.url,
-      imageURL: jsonData.small_preview_image_url,
-      Title: jsonData.collection_name,
-      Tokenid: jsonData.token_id,
-      Buyer: JSON.parse(localStorage.getItem('buyer')),
-    Price: JSON.parse(localStorage.getItem('dealPrice')),
+      collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
+      imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
+      Title: "mfer",
+      Tokenid: "120",
+      Buyer: "Vitalik.ETH",
+    Price: "2.5 ETH",
     TimeLeft: "60 Minutes"
   }
 
-console.log(JSON.parse(localStorage.getItem('choice')));
+
 
 
   return (
@@ -52,12 +51,12 @@ console.log(JSON.parse(localStorage.getItem('choice')));
               src={data.imageURL}
             />
           }
-          actions={[
-            <>
-            <a href="/PendingSales"><Button type="primary" onClick={()=>alert('Handshake Submitted Successfully!')} style={{ background: "green", borderColor: "green"}}>Submit Handshake</Button></a>
-            <Button onClick={console.log("Click Reject")}>Edit</Button>
-            </>
-          ]}
+          // actions={[
+          //   <>
+          //   <a href="/PendingSales"><Button type="primary" onClick={()=>alert('Handshake Submitted Successfully!')} style={{ background: "green", borderColor: "green"}}>Submit Handshake</Button></a>
+          //   <Button onClick={console.log("Click Reject")}>Edit</Button>
+          //   </>
+          // ]}
         >
           <Meta
             title={<Title level={3}><a href={data.collection}>{data.Title}</a> - {data.Tokenid}</Title>}
@@ -67,7 +66,7 @@ console.log(JSON.parse(localStorage.getItem('choice')));
                         >
                           <List.Item />
                           <List.Item><Title level={3} strong>Buyer: {data.Buyer}</Title> </List.Item>
-                          <List.Item><Title level={3} strong>Price: {data.Price} ETH</Title> </List.Item>                
+                          <List.Item><Title level={3} strong>Price: {data.Price}</Title> </List.Item>                
                         </List>}
               />        
           </Card>

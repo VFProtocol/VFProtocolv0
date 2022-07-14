@@ -36,7 +36,7 @@ const { Meta } = Card;
 // with a scrollbar
 // API Request
 var myHeaders = new Headers();
-myHeaders.append("X-API-Key", "vf-protocol-24718e04"); //API Key in .env file
+myHeaders.append("X-API-Key", CENTER_API_KEY); //API Key in .env file
 
 var requestOptions = {
   method: 'GET',
@@ -62,6 +62,7 @@ var requestOptions = {
       let tempTokenId = nftData[i].tokenId;
       let resp = await fetch(`https://api.center.dev/v1/ethereum-mainnet/${tempAddress}/${tempTokenId}`, requestOptions)
       let json = await resp.json()
+      console.log(json);
       nftTemp.push(json);
       }
       updaterenderNFT(nftTemp);
@@ -78,16 +79,21 @@ var requestOptions = {
 
 
 
-// State for selecting individual NFTs
+// State and logging for selecting individual NFTs
 const [choice, setChoice] = useState();
+useEffect(() => {
+  console.log('A choice has been made', choice);
+  localStorage.setItem('choice', JSON.stringify(choice));
+}, [choice])
 
 // Function for unselecting everything else whenever users select NFT
 const select = (item) => {
-  for (let i=0;i<data1.length;i++) {
-    data1[i].selection = false;
+  for (let i=0;i<renderNFT.length;i++) {
+    renderNFT[i].selection = false;
   };  
   item.selection = !item.selection;
   setChoice(item);
+  // await console.log(choice);
   }
   
 
@@ -113,7 +119,6 @@ const select = (item) => {
             )}
        
           />
-      
       </div>
     
    </>
