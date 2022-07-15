@@ -7,7 +7,11 @@ import {Logo} from '../index.jsx';
 export default function Header({ link, title, subTitle }) {
   return (
     <a href={link} target="_blank" rel="noopener noreferrer">
-      {/* <img src={Logo} /> MESS WITH THIS LATER*/}
+      {/* <img 
+      src="https://gateway.pinata.cloud/ipfs/QmTv5K6zGvZ3857aCoySC1e1XqciK6U7KEqx6xkq8wHoC4" 
+      width={400}
+      height={100}
+      />  */}
       <PageHeader title={title} subTitle={subTitle} style={{ cursor: "pointer" }} />
     </a>
   );

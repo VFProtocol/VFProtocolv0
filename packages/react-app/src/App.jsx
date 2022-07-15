@@ -821,7 +821,7 @@ const withdrawFunds = async () => {
           <Route exact path="/">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
           <NFTcardGrid
-          data1={data1} />
+          address={address} />
         </div>
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 320 }}>
         <AddressInput
@@ -848,7 +848,7 @@ const withdrawFunds = async () => {
             size="large"
             onClick={() => {
               // approve();
-              window.location.href='/mvpconfirm'
+              window.location.href='/mvpconfirm';
             }}
             
           >
@@ -870,7 +870,8 @@ const withdrawFunds = async () => {
             <Col>
             </Col>
             <Col >
-            <NFTConfirmationCard/>
+            <NFTConfirmationCard
+            address={address}/>
             </Col>
             <Col >
             
