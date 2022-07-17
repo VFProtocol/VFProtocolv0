@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge, Card, Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
-
+console.log("RENDERING");
 
 /**
   ~ What it does? ~
@@ -22,7 +22,8 @@ import { Badge, Card, Typography } from "antd";
 **/
 
 export default function NFTcard(props) {
-const {cardData} = props;  
+const {cardData} = props; 
+// console.log("CARD STUFF: ",cardData); 
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Selected"
