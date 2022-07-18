@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useBalance } from "eth-hooks";
+import { useBalance, useContractReader } from "eth-hooks";
+import {Divider} from "antd";
+import { BigNumber } from 'ethers'
 
 const { utils } = require("ethers");
 
@@ -29,10 +31,23 @@ const { utils } = require("ethers");
   - Provide price={price} of ether and get your balance converted to dollars
 **/
 
-export default function Balance(props) {
+export default function WithdrawBalance(props) {
   const [dollarMode, setDollarMode] = useState(false);
 
-  const balance = useBalance(props.provider, props.address);
+
+  // New way of getting the balance [using useContractReader]
+  // const contractReader = useContractReader(props.provider, props.contractAddress);
+  // console.log("CoNTRACT READER: ",contractReader);
+  // const vfpBalance = contractReader.balances(props.address);
+  // console.log(vfpBalance);
+  // const balance = props.vfpBalance;
+  const x = props.vfpBalance;
+  // const balance = BigNumber.from(x);
+  const balance = x;
+
+  // Old way of getting balance [Wallet address balance]
+  // const balance = useBalance(props.provider, props.address);
+  console.log(balance);
   let floatBalance = parseFloat("0.00");
   let usingBalance = balance;
 
@@ -57,6 +72,8 @@ export default function Balance(props) {
   }
 
   return (
+    <div>
+    <Divider orientation="left">Redeemable Funds</Divider>      
     <span
       style={{
         verticalAlign: "middle",
@@ -68,7 +85,8 @@ export default function Balance(props) {
         setDollarMode(!dollarMode);
       }}
     >
-      {displayBalance}
+      {displayBalance} 
     </span>
+    </div>
   );
 }
