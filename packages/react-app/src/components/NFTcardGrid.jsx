@@ -114,7 +114,7 @@ var requestOptions = {
     setTimeout(() => {
       setRenderState(true);
       console.log("RENDER STATE CHANGE ",renderState)
-    }, "400")}
+    }, "500")}
  },[apiState]);
 
   useEffect(() => {
@@ -133,7 +133,7 @@ var requestOptions = {
       updateapiState("walletSuccess");
     }
 
-    //Original way to get NFT metadata
+    //Original way to get NFT metadata  - Works but takes a long time (5+ seconds) to load
     // const getRender = async () => {
     //   let nftTemp = [];
     //   for (let i=0;i<nftData.length;i++) {
@@ -144,6 +144,8 @@ var requestOptions = {
     //   // console.log(json);
     //   nftTemp.push(json);
     //   }
+
+
     let nftTemp = [];
     
     const fetchItem = async (x) => {
@@ -163,14 +165,14 @@ var requestOptions = {
     
     // Consolidate API Call promises into one array
     const promiseFunc = async () => {
-      let result = await Promise.all([nftItems.map(fetchItem)]).then((callList) =>
-      { return callList;})
+      let result = await Promise.all([nftItems.map(fetchItem)])
+      console.log("SAM TEST:" , result);
     return result
     }
 
     const getRender = async () => {
       let promiseList = await promiseFunc();
-      console.log(promiseList);
+      console.log("LOOK HERE: ", promiseList);
       updaterenderNFT(nftTemp);
       
       } 

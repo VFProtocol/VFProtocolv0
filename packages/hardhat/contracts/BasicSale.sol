@@ -71,7 +71,8 @@ contract BasicSale is ReentrancyGuard, Pausable {
   }
 
   mapping (uint => Sale) sales; //Map of index : Handshakes struct <- has all transaction data needed inside
-  mapping (address => uint) balances; //Map of seller wallet addresses : Withdrawalable ETH <- only increased by buyers accepting Handshakes
+  mapping (address => uint) balances; //Map of seller wallet addresses : Withdrawalable ETH <- only increased by buyers accepting Handshakes | 
+  // Check balanceOf to see if balance exists for wallet address
 
   // Set emergency multisig owner
   constructor() payable {
@@ -187,6 +188,14 @@ contract BasicSale is ReentrancyGuard, Pausable {
     require(block.timestamp<sales[_index].saleExpiration,"Time Expired"); //Checks to see if time expired to avoid gas wastage
     sales[_index].offerCanceled = true;
   }
+
+  // BalanceOf function returns the redeemable balance of a given address
+  // Might make sense to only let YOU check your OWN balance? (Not sure if this is a good idea)
+  function balanceOf(address requester) external view returns (uint256) {
+        require(requester != address(0), "ERC721: address zero is not a valid owner");
+        return balances[requester];
+    }
+
 
   //Receive function to handle unknown transactions
   receive() external payable whenNotPaused() {

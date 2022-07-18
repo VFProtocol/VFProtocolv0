@@ -34,7 +34,8 @@ import {
   NFTcard,
   NFTcardGrid,
   NFTConfirmationCard,
-  NFTExpiredCard
+  NFTExpiredCard,
+  WithdrawBalance
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constantsTemplate";
 // import { NETWORKS, ALCHEMY_KEY } from "./constants"; constants w/ Production API Keys
@@ -289,7 +290,10 @@ function App(props) {
   // TODO: Substitute in NFT API Stuff in order to interact with this contract
 const balance = useContractReader(readContracts, "YourCollectible", "balanceOf", [address]);
 const vfprotocolv0 = readContracts?.BasicSale?.address; //TODO: THIS IS HOW YOU GET THE MAIN CONTRACT ADDRESS
-console.log("🤗 balance:", balance);
+console.log("🤗 Personal balance:", balance);
+const vfpBalance = useContractReader(readContracts, "BasicSale", "balanceOf", [address]);
+console.log("🤗 VFP balance:", vfpBalance);
+// const vfpBalance="0";
 
 // 📟 Listen for broadcast events
 // TODO: UPDATE WITH SUBGRAPH STUFF
@@ -566,7 +570,7 @@ const accept = async () => {
   };
 
 // 4. This lets the seller withdraw their funds after they sell something.
-// They can also check their balance with this widget (not yet). Need to update this with persistent state
+// They can also check their balance with this widget (not yet) in the Redeem Page. Need to update this with persistent state
 // for each user.
 
 const withdrawFunds = async () => {
@@ -604,9 +608,9 @@ const withdrawFunds = async () => {
         <Menu.Item key="/">
           <Link to="/">Create Handshakes</Link>
         </Menu.Item>
-        {/* <Menu.Item key="/ux">
-          <Link to="/ux">Create Handshakes</Link>
-        </Menu.Item> */}
+        <Menu.Item key="/ux">
+          <Link to="/ux">Beta Flow</Link>
+        </Menu.Item>
         {/* <Menu.Item key="/mvpconfirm">
           <Link to="/mvpconfirm">MVP Confirmation Page</Link>
         </Menu.Item> */}
@@ -615,6 +619,9 @@ const withdrawFunds = async () => {
         </Menu.Item>
         <Menu.Item key="/PendingOffers">
           <Link to="/PendingOffers">Pending Offers</Link>
+        </Menu.Item>
+        <Menu.Item key="/Redeem">
+          <Link to="/Redeem">Redeem Funds</Link>
         </Menu.Item>
         {/* <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
@@ -637,6 +644,7 @@ const withdrawFunds = async () => {
 
       <Switch>
         {/* Begin NFT Pages */}
+        {/* This is the Beta User Flow on one page */}
         <Route exact path="/ux">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
               <Button
@@ -691,7 +699,8 @@ const withdrawFunds = async () => {
           <Input
             onChange={e => {
               setPrice(e.target.value);
-              
+              console.log("DEAL PRICE: ", dealPrice);
+              console.log("TARGET: ",e.target.value);
             }}
             placeholder="Set Price"
           />
@@ -817,7 +826,11 @@ const withdrawFunds = async () => {
             </div>
             <HCardBuyerList />
             </div>
-          </Route> 
+          </Route>
+
+
+
+           {/*THIS IS THE CREATE HANDSHAKE LANDER - USER STEP ZERO */}
           <Route exact path="/">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
           <NFTcardGrid
@@ -835,8 +848,8 @@ const withdrawFunds = async () => {
             onChange={e => {
               setPrice(e.target.value);
               localStorage.setItem('dealPrice', JSON.stringify(e.target.value));
-              console.log(dealPrice);
-              console.log(e.target.value);
+              console.log("DEAL PRICE: ", dealPrice);
+              console.log("TARGET: ",e.target.value);
               
             }}
             placeholder="Set Price"
@@ -903,7 +916,31 @@ const withdrawFunds = async () => {
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
           <HCardSellerList/>
           </div>
-
+        </Route>
+        <Route exact path="/Redeem">
+          <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              <div>
+                <WithdrawBalance
+                address={address} 
+                provider={localProvider} 
+                price={price}
+                contractAddress={vfprotocolv0}
+                vfpBalance={vfpBalance} 
+                />
+              </div>
+              <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+            <Button
+                    disabled={moving}
+                    shape="round"
+                    size="large"
+                    onClick={() => {
+                      withdrawFunds(); 
+                    }}
+                  >
+                    Withdraw Funds
+                  </Button>
+            </div>
+        </div>
         </Route>
           <Route exact path="/debug">
           {/*

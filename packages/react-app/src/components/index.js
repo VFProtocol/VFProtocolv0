@@ -31,3 +31,4 @@ export { default as NFTcard } from "./NFTcard";
 export { default as NFTcardGrid } from "./NFTcardGrid";
 export { default as NFTConfirmationCard } from "./NFTConfirmationCard";
 export { default as NFTExpiredCard } from "./NFTExpiredCard";
+export { default as WithdrawBalance } from "./WithdrawBalance";
