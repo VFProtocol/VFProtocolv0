@@ -19,6 +19,7 @@ import {
   Address,
   AddressInput,
   Contract,
+  Events,
   Faucet,
   GasGauge,
   Header,
@@ -939,6 +940,16 @@ const withdrawFunds = async () => {
                   >
                     Withdraw Funds
                   </Button>
+            </div>
+            <div>
+            <Events
+              contracts={readContracts}
+              contractName="BasicSale"
+              eventName="SaleInit"
+              localProvider={localProvider}
+              mainnetProvider={mainnetProvider}
+              startBlock={1}
+            />
             </div>
         </div>
         </Route>
