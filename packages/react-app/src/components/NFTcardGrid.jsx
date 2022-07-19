@@ -37,7 +37,7 @@ let seller = props.address;
 // console.log("yeet2", typeof seller, seller);
 // const walletAPICall = "https://api.center.dev/v1/ethereum-mainnet/account/"+seller+"/assets-owned?limit=100";
 // console.log(walletAPICall);
-
+const network = "ethereum-mainnet";
 
 // API Request
 // API Header/Response Data
@@ -71,7 +71,7 @@ var requestOptions = {
   // Set walletAPICall when seller is set
   if (seller && seller.length == 42 && !addressState) { 
     setAddressState(true);
-    updateWalletAPICall("https://api.center.dev/v1/ethereum-mainnet/account/"+seller+"/assets-owned?limit=100");
+    updateWalletAPICall("https://api.center.dev/v1/"+network+"/account/"+seller+"/assets-owned?limit=100");
     console.log("WALLET CALL WRITTEN: ", walletAPICall);
     updateapiState("init");
   }
@@ -155,7 +155,7 @@ var requestOptions = {
       // console.log("address: ", tempAddress);
       let tempTokenId = x.tokenId;
       // console.log("Token: ", tempTokenId);
-      const resp = await fetch(`https://api.center.dev/v1/ethereum-mainnet/${tempAddress}/${tempTokenId}`, requestOptions); 
+      const resp = await fetch(`https://api.center.dev/v1/${network}/${tempAddress}/${tempTokenId}`, requestOptions); 
       const data = await resp.json();
       // console.log("data: ", data);
       nftTemp.push(data);
