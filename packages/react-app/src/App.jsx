@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import {ExperimentOutlined} from "@ant-design/icons";
 import {
   useBalance,
+  useBlockNumber,
   useContractLoader,
   useContractReader,
   useGasPrice,
@@ -240,6 +241,11 @@ function App(props) {
   const tx = Transactor(userSigner, gasPrice);
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
   const yourLocalBalance = useBalance(localProvider, address);
+  
+  // Record Block Number for later use in NFTConfirmationCard for AWS storage
+  const blockNum = useBlockNumber(localProvider);
+  // console.log("blockNum", blockNum);
+
   // Just plug in different 🛰 providers to get your balance on different chains:
   const yourMainnetBalance = useBalance(mainnetProvider, address);
   // const contractConfig = useContractConfig();
@@ -305,6 +311,12 @@ console.log("📟 Transfer events:", transferEvents);
 const sellEvents = useEventListener(readContracts, "BasicSale", "SaleInit", localProvider, 1);
 const buyEvents = useEventListener(readContracts, "BasicSale", "BuyInit", localProvider, 1);
 const successConfirm = <Alert message="Success Text" type="success" />; //Create Alert
+if (sellEvents.length > 0) {  
+  console.log("SELL EVENTS: ",sellEvents)  
+  console.log("Sell Events latest Index:", sellEvents?.length-1, " or ", sellEvents[sellEvents.length-1].args.index, " converted ");    
+  let v = ethers.BigNumber.from(sellEvents[sellEvents.length-1].args.index);  
+  console.log("Sell Events latest Index:", v.toNumber());}
+
 //
 // 🧠 This effect will update yourCollectibles by polling when your balance changes
 //
@@ -315,7 +327,7 @@ const [approving, setApproving] = useState(false);
 const [moving, setMoving] = useState(false);
 const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
-const [nftContractAddress, setnftContractAddress] = useState("0xNFTContractAddressGoesHere");
+const [nftContractAddress, setnftContractAddress] = useState("0x5fbdb2315678afecb367f032d93f642f64180aa3");
 const [newToken, setNewToken] = useState();
 const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
 const [dealPrice, setPrice] = useState(); //This sets the seller's price
@@ -633,10 +645,10 @@ const withdrawFunds = async () => {
         </Menu.Item>
         <Menu.Item key="/transfers">
           <Link to="/transfers">Transfers</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="/transferspecial">
           <Link to="/transferspecial">Transfers Special</Link>
-        </Menu.Item> */}
+        </Menu.Item>
         {/* End NFT Pages */}
         {/* <Menu.Item key="/subgraph">
           <Link to="/subgraph">Subgraph</Link>
@@ -885,7 +897,11 @@ const withdrawFunds = async () => {
             </Col>
             <Col >
             <NFTConfirmationCard
-            address={address}/>
+            address={address}
+            readContracts={readContracts}
+            localProvider={localProvider}
+            blockNum = {blockNum}
+            />
             </Col>
             <Col >
             
@@ -940,16 +956,6 @@ const withdrawFunds = async () => {
                   >
                     Withdraw Funds
                   </Button>
-            </div>
-            <div>
-            <Events
-              contracts={readContracts}
-              contractName="BasicSale"
-              eventName="SaleInit"
-              localProvider={localProvider}
-              mainnetProvider={mainnetProvider}
-              startBlock={1}
-            />
             </div>
         </div>
         </Route>

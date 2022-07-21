@@ -1,9 +1,10 @@
 import React from "react";
 import { Anchor, Badge, Button, Card, List,  Typography } from "antd";
-// import { useEventListener } from "eth-hooks/events/useEventListener";
+import { useEventListener } from "eth-hooks/events/useEventListener";
 import {
   ClockCircleOutlined
 } from "@ant-design/icons";
+import { local } from "web3modal";
 const {Link} = Anchor;
 /**
   ~ What it does? ~
@@ -24,6 +25,15 @@ const {Link} = Anchor;
 **/
 
 export default function NFTConfirmationCard(props) {
+  const { ethers } = require("ethers");
+// const ethers = props.ethers;
+const localProvider = props.localprovider;
+
+
+// Get Block Number - Might not be 100% accurate, but only needs to be close enough
+// Will get stored in AWS DynamoDB so you can use it laterto find most recent SaleInit Event
+let approxblockNum = props.blockNum;
+
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Awaiting Your Confirmation"
@@ -41,8 +51,10 @@ const data =
 const buyerLink = "https://etherscan.io/address/"+data.Buyer;
 console.log(JSON.parse(localStorage.getItem('choice')));
 
+
 // API Call to record transaction in AWS
-var callAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) => {
+var callAWSAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) => {
+  
   // instantiate a headers object
   var myHeaders = new Headers();
   // add content type header to object
@@ -71,7 +83,16 @@ var callAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) => {
   window.location.href = "/PendingSales";
 }
 
-
+// Ethers.js call to get the last Handshake Index for SaleInit AWS POST call
+// This value is ultimately passed by buyer with payment to accept Handshake
+// Should probably functionalize this later for re-useability
+const sellEvents = useEventListener(props.readContracts, "BasicSale", "SaleInit", localProvider, 1); //Crawl blockchain events for SaleInit
+// Avoids False firing before loading
+if (sellEvents.length > 0) {
+  let lastHandshake = ethers.BigNumber.from(sellEvents[sellEvents.length-1].args.index); //Get last Handshake Index for next Handshake 
+  var handshakeIndex = lastHandshake.toNumber() + 1; //Convert to Number and add 1 to calculate current anticipated Handshake index
+}
+else {var handshakeIndex = 0;} //If no Handshakes, set to 0
 
 
   return (
@@ -88,7 +109,7 @@ var callAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) => {
             <>
             {/* <a href="/PendingSales"> */}
               <Button type="primary" onClick={
-                ()=>{callAPI(data.collectionAddress,data.Tokenid,data.Buyer,data.Seller,data.Price);
+                ()=>{callAWSAPI(data.Seller, handshakeIndex, data.collectionAddress,data.Tokenid,data.Buyer,data.Price, approxblockNum);
                 
 
                 
