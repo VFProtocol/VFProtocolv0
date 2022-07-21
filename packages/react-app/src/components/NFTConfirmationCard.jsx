@@ -31,8 +31,10 @@ const localProvider = props.localprovider;
 
 
 // Get Block Number - Might not be 100% accurate, but only needs to be close enough
-// Will get stored in AWS DynamoDB so you can use it laterto find most recent SaleInit Event
+// Will get stored in AWS DynamoDB so you can use it later to find most recent SaleInit Event
 let approxblockNum = props.blockNum;
+// Get seller address from props
+let seller = props.address;
 
 const { Text, Title } = Typography;
 const { Meta } = Card;
@@ -53,7 +55,7 @@ console.log(JSON.parse(localStorage.getItem('choice')));
 
 
 // API Call to record transaction in AWS
-var callAWSAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) => {
+var callAWSAPI = async (nftSeller,txIndex, collectionAddress,TokenID,nftBuyer,nftPrice,approxblockNum) => {
   
   // instantiate a headers object
   var myHeaders = new Headers();
@@ -61,12 +63,13 @@ var callAWSAPI = async (collectionAddress,TokenID,nftBuyer,nftSeller,nftPrice) =
   myHeaders.append("Content-Type", "application/json");
   // using built in JSON utility package turn object to string and store in a variable
   var raw = JSON.stringify(
-    {"TransactionID":2, //Need to get this from the blockchain
+    {"nftSeller":nftSeller,
+      "TransactionID":txIndex, //Need to get this from the blockchain
   "nftCollectionAddress":collectionAddress,
   "nftTokenID":TokenID,
   "nftBuyer":nftBuyer,
-  "nftSeller":nftSeller,
-  "nftPrice":nftPrice});
+  "nftPrice":nftPrice,
+  "approxBlockNum":approxblockNum});
   // create a JSON object with parameters for API call and store in a variable
   var requestOptions = {
       method: 'POST',
@@ -95,6 +98,7 @@ if (sellEvents.length > 0) {
 else {var handshakeIndex = 0;} //If no Handshakes, set to 0
 
 
+console.log("Handshake Call: ",seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum);
   return (
       <>
       <Badge.Ribbon text={labelId} placement="start" color="grey">
@@ -109,10 +113,7 @@ else {var handshakeIndex = 0;} //If no Handshakes, set to 0
             <>
             {/* <a href="/PendingSales"> */}
               <Button type="primary" onClick={
-                ()=>{callAWSAPI(data.Seller, handshakeIndex, data.collectionAddress,data.Tokenid,data.Buyer,data.Price, approxblockNum);
-                
-
-                
+                ()=>{callAWSAPI(seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum); //Call API to record transaction                
                 }} 
               style={{ background: "green", borderColor: "green"}}>
                 Submit Handshake</Button>
