@@ -58,14 +58,14 @@ const data =
           ]}
         >
           <Meta
-            title={<Text><a href={data.collection}>{data.Title}</a> - {data.Tokenid}</Text>}
+            title={<Text><a href={props.CollectionAddress}>{data.Title}</a> - {props.TokenID}</Text>}
             description={<List
                         size="small"
                         itemLayout="vertical"
                         >
-                          <List.Item><Text strong>Buyer: {data.Buyer}</Text> </List.Item>
-                          <List.Item><Text strong>Price: {data.Price}</Text> </List.Item>
-                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {data.TimeLeft}</Text> </List.Item>                
+                          <List.Item><Text strong>Buyer: {props.Buyer}</Text> </List.Item>
+                          <List.Item><Text strong>Price: {props.Price}</Text> </List.Item>
+                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {props.DateTime}</Text> </List.Item>                
                         </List>}
               />        
           </Card>

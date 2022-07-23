@@ -69,6 +69,7 @@ var callAWSAPI = async (nftSeller,txIndex, collectionAddress,TokenID,nftBuyer,nf
   "nftTokenID":TokenID,
   "nftBuyer":nftBuyer,
   "nftPrice":nftPrice,
+  "txStatus":"Pending", //All tx are pending until they are confirmed by blockchain call
   "approxBlockNum":approxblockNum});
   // create a JSON object with parameters for API call and store in a variable
   var requestOptions = {

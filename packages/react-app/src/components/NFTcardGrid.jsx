@@ -34,10 +34,7 @@ const { Meta } = Card;
 console.log("yeet", props.address)
 // THIS NEEDS TO HAPPEN AND BE VALIDATED BEFORE THE API CALL IS MADE
 let seller = props.address;
-// console.log("yeet2", typeof seller, seller);
-// const walletAPICall = "https://api.center.dev/v1/ethereum-mainnet/account/"+seller+"/assets-owned?limit=100";
-// console.log(walletAPICall);
-const network = "ethereum-mainnet";
+const network = "ethereum-mainnet"; //Remove hardcode after testing
 
 // API Request
 // API Header/Response Data

@@ -931,7 +931,9 @@ const withdrawFunds = async () => {
           </Route>
           <Route exact path="/PendingSales">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-          <HCardSellerList/>
+          <HCardSellerList
+            address={address}
+          />
           </div>
         </Route>
         <Route exact path="/Redeem">
