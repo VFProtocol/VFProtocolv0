@@ -98,6 +98,9 @@ if (sellEvents.length > 0) {
 }
 else {var handshakeIndex = 0;} //If no Handshakes, set to 0
 
+//Convert before sending to AWS & EVM
+let gweiPrice = data.Price * 1e18;
+
 
 console.log("Handshake Call: ",seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum);
   return (
@@ -114,7 +117,7 @@ console.log("Handshake Call: ",seller, handshakeIndex, data.collectionAddress, d
             <>
             {/* <a href="/PendingSales"> */}
               <Button type="primary" onClick={
-                ()=>{callAWSAPI(seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum); //Call API to record transaction                
+                ()=>{callAWSAPI(seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, gweiPrice, approxblockNum); //Call API to record transaction                
                 }} 
               style={{ background: "green", borderColor: "green"}}>
                 Submit Handshake</Button>
