@@ -50,58 +50,6 @@ import { Home, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 
-//PROP TESTING AREA
-const data1 = 
-  [{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "120",
-  }  ,{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "121",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "122",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "123",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "124",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "125",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "126",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "127",
-  }]
-
-// Function to add selection property to each object
-for (let i=0;i<data1.length;i++) {
-  data1[i].selection = false;
-}
-  data1[6].selection = true;
-
-const data2 = data1[0];
-
 
 // END PROP TESTING AREA
 
@@ -327,7 +275,7 @@ const [approving, setApproving] = useState(false);
 const [moving, setMoving] = useState(false);
 const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
-const [nftContractAddress, setnftContractAddress] = useState("0x5fbdb2315678afecb367f032d93f642f64180aa3");
+const [nftContractAddress, setnftContractAddress] = useState("0x5fbdb2315678afecb367f032d93f642f64180aa3"); // OLD UX
 const [newToken, setNewToken] = useState();
 const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
 const [dealPrice, setPrice] = useState(); //This sets the seller's price
@@ -524,7 +472,49 @@ const result = tx(
   );
 };
 
-// Function to approve Selected Token for Transfer by Seller
+// NEW CONTRACT APPROVAL + SUBMISSION PATTERN --------------------------------------------------------------------------------
+// New Function to approve Selected Token for Transfer by Seller in UX FLOW - WORKS WITH RINKEBY AND MAINNET
+const approveNew = async () => {
+  const jsonData = JSON.parse(localStorage.getItem('choice')); //Retrieve Handshake data from localStorage
+  console.log("contractAddress ", jsonData.address); //Retrieve address
+  const selectNFTAddress = jsonData.address; //Retrieve address
+  const selectTokenId = jsonData.token_id; //Retrieve id
+
+  readContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, localProvider);
+  writeContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, userSigner);
+  
+  // Send user to next page while approving tokens
+  window.location.href='/mvpconfirm'; //THIS IS THE LINK TO THE CONFIRMATION PAGE
+
+  
+  // Mute for now
+  const result = tx(
+    writeContracts &&
+      writeContracts.selectNFTContractAddress &&
+      writeContracts.selectNFTContractAddress.approve(vfprotocolv0, selectTokenId),
+    update => {
+      console.log("📡 Transaction Update:", update);
+      if (update && (update.status === "confirmed" || update.status === 1)) {
+        console.log(" 🍾 Transaction " + update.hash + " finished!");
+        console.log(
+          " ⛽️ " +
+            update.gasUsed +
+            "/" +
+            (update.gasLimit || update.gas) +
+            " @ " +
+            parseFloat(update.gasPrice) / 1000000000 +
+            " gwei",
+        );
+      }
+    },
+  );
+  };
+
+
+
+
+//OLD CONTRACT APPROVAL + SUBMISSION PATTERN --------------------------------------------------------------------------------
+// OLD Function to approve Selected Token for Transfer by Seller in UX FLOW - JUST WORKS WITH LOCAL CHAIN
 const approve = async () => {
 const targetToken = newToken; 
 readContracts.nftContractAddress = new ethers.Contract(nftContractAddress, ERC721ABI, localProvider);
@@ -873,8 +863,7 @@ const withdrawFunds = async () => {
             shape="round"
             size="large"
             onClick={() => {
-              // approve();
-              window.location.href='/mvpconfirm';
+              approveNew();
             }}
             
           >
