@@ -100,7 +100,7 @@ const data =
       Title: "mfer",
       Tokenid: "120",
       Buyer: "Vitalik.ETH",
-    Price: "2.5 ETH",
+    // Price: "2.5 ETH",
     TimeLeft: "32 Minutes"
   }
 ]
@@ -140,24 +140,7 @@ else {
     return (
         <>
         <Divider orientation="left">All Seller Handshakes</Divider>      
-        
-          <List
-                  grid={{
-                    gutter: 16,
-                    column: 3,
-                  }}
-              dataSource={data}
-              renderItem={(item) => (
-                
-                <List.Item>
-                <HandshakeCardSeller 
-                  data={item}
-                /> 
-                </List.Item>
-              
-              )}
-         
-            />
+      
         
       
       <button onClick={() => {

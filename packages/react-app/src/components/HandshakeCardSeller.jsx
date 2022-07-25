@@ -26,6 +26,7 @@ import {
 export default function HandshakeCardSeller(props) {
 const { Text, Title } = Typography;
 const { Meta } = Card;
+const { ethers } = require("ethers");
 
 var labelId = "Pending";
 if (props.data.Status === "Pending") {
@@ -47,11 +48,19 @@ const data =
       Title: "mfer",
       Tokenid: "120",
       Buyer: "Vitalik.ETH",
-    Price: "2.5 ETH",
+    // Price: "2.5 ETH",
     TimeLeft: "60 Minutes"
   }
 
 console.log("props", props, props.data)
+// Create Buyer Link
+const buyerLink = "https://etherscan.io/address/"+props.data.Buyer;
+// Convert price back to ETH
+// const price = web3.utils.fromWei(props.data.Price, 'ether');
+let priceString = ethers.BigNumber.from(props.data.Price.toString());
+const price = ethers.utils.formatEther(priceString);
+//props.data.Price / 1000000000000000000;
+
 
 
   return (
@@ -76,8 +85,8 @@ console.log("props", props, props.data)
                         size="small"
                         itemLayout="vertical"
                         >
-                          <List.Item><Text strong>Buyer: {props.data.Buyer}</Text> </List.Item>
-                          <List.Item><Text strong>Price: {props.data.Price}</Text> </List.Item>
+                          <List.Item><Text strong>Buyer: <a href={buyerLink}>{props.data.Buyer}</a></Text> </List.Item>
+                          <List.Item><Text strong>Price: {price}</Text> </List.Item>
                           <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {props.data.DateTime}</Text> </List.Item>                
                         </List>}
               />        
