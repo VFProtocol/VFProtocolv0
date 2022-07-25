@@ -487,11 +487,11 @@ const approveNew = async () => {
   window.location.href='/mvpconfirm'; //THIS IS THE LINK TO THE CONFIRMATION PAGE
 
   
-  // Mute for now
+  // Does nothing until on correct network and contract is deployed
   const result = tx(
     writeContracts &&
       writeContracts.selectNFTContractAddress &&
-      writeContracts.selectNFTContractAddress.approve(vfprotocolv0, selectTokenId),
+      writeContracts.selectNFTContractAddress.approve(vfprotocolv0, selectTokenId), //Might need to add .wait() when on rinkeby/mainnet https://stackoverflow.com/questions/64951267/unhandled-rejection-error-call-revert-exception
     update => {
       console.log("📡 Transaction Update:", update);
       if (update && (update.status === "confirmed" || update.status === 1)) {

@@ -31,12 +31,14 @@ const { Meta } = Card;
 // Get seller address from props
 let seller = props.address;
 let apiCall = "https://omu0yb846i.execute-api.us-east-1.amazonaws.com/dev/"+seller;
+var nftData = [];
 
   // 📟 Get all Handshakes for this seller
 const [apiState, updateapiState] = useState("loading"); // Set initial API state
 const [addressState, setAddressState] = useState(false); // Set initial address Bool
+const [nftCompData, setNftCompData] = useState(); // Set initial NFT data
 
-// API Call to record transaction in AWS
+// API Call to get transactions from AWS
 var APIGetCall = async () => {
     // instantiate a headers object
   var myHeaders = new Headers();
@@ -52,18 +54,23 @@ var APIGetCall = async () => {
       redirect: 'follow'
   };
   // make API call with parameters and use promises to get response
-  await fetch(apiCall, requestOptions)
+  let result = await fetch(apiCall, requestOptions)
   .then((response) => { //THIS IS HOW YOU ACCESS THE RESPONSE DONT DELETE
     console.log(response);
-    response.json().then((data) => {
-        console.log(data);
-        const responseCardData = data.Items;
-        console.log(responseCardData);
+    return response.json()})
+    // .then((data) => {
+    //     console.log(data);
+    //     const responseCardData = data.Items;
+    //     console.log(responseCardData);
       
-    });
-});
-  updateapiState("HandshakeListSuccess");  
-  
+    // });
+// });
+
+    console.log("RESULT: ", result, result.Items);
+    nftData = result.Items;
+    setNftCompData(nftData);
+    updateapiState("loaded");
+  return result.Items;  
   // window.location.href = "/PendingSales";
 }
 
@@ -71,16 +78,17 @@ var APIGetCall = async () => {
 if (seller && seller.length == 42 && !addressState) { 
   setAddressState(true);
   APIGetCall();
+    
   console.log("API HANDSHAKE CALL WRITTEN for: ", seller);
   updateapiState("Pending");
-  
+  // console.log("NFT AWS DATA:", nftData, nftData1, nftCompData)
 }
 
 
 
 
-
-
+console.log("API STATE: ", apiState);
+console.log("NFTCOMPDATA ", nftCompData)
 
 
 // Need to create loop where it receives data props and outputs each of the NFT images
@@ -98,7 +106,7 @@ const data =
 ]
 
 
-
+if (apiState == "loaded") {
   return (
       <>
       <Divider orientation="left">All Seller Handshakes</Divider>      
@@ -108,7 +116,7 @@ const data =
                   gutter: 16,
                   column: 3,
                 }}
-            dataSource={data}
+            dataSource={nftCompData}
             renderItem={(item) => (
               
               <List.Item>
@@ -124,9 +132,40 @@ const data =
     
     <button onClick={() => {
                       APIGetCall(seller); 
-                    }}>Get Call</button>
+                    }}>BANANA CHECK </button>
    </>
   );
+}
+else {
+    return (
+        <>
+        <Divider orientation="left">All Seller Handshakes</Divider>      
+        
+          <List
+                  grid={{
+                    gutter: 16,
+                    column: 3,
+                  }}
+              dataSource={data}
+              renderItem={(item) => (
+                
+                <List.Item>
+                <HandshakeCardSeller 
+                  data={item}
+                /> 
+                </List.Item>
+              
+              )}
+         
+            />
+        
+      
+      <button onClick={() => {
+                        APIGetCall(seller); 
+                      }}>Get Call</button>
+     </>
+    );
+  }
 }
 
 

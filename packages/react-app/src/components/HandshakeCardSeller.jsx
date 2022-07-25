@@ -26,7 +26,20 @@ import {
 export default function HandshakeCardSeller(props) {
 const { Text, Title } = Typography;
 const { Meta } = Card;
-const labelId = "Awaiting Buyer Acceptance"
+
+var labelId = "Pending";
+if (props.data.Status === "Pending") {
+labelId = "Awaiting Buyer Acceptance"
+// EDIT COLORS AS WELL
+//BLUE
+} else if (props.data.Status === "Accepted") {
+labelId = "Accepted";
+// Green
+} else {
+labelId = "Expired";
+// GREY
+}
+
 const data = 
   {
       collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
@@ -38,7 +51,7 @@ const data =
     TimeLeft: "60 Minutes"
   }
 
-
+console.log("props", props, props.data)
 
 
   return (
@@ -58,14 +71,14 @@ const data =
           ]}
         >
           <Meta
-            title={<Text><a href={props.CollectionAddress}>{data.Title}</a> - {props.TokenID}</Text>}
+            title={<Text><a href={props.CollectionAddress}>{data.Title}</a> - {props.data.TokenID}</Text>}
             description={<List
                         size="small"
                         itemLayout="vertical"
                         >
-                          <List.Item><Text strong>Buyer: {props.Buyer}</Text> </List.Item>
-                          <List.Item><Text strong>Price: {props.Price}</Text> </List.Item>
-                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {props.DateTime}</Text> </List.Item>                
+                          <List.Item><Text strong>Buyer: {props.data.Buyer}</Text> </List.Item>
+                          <List.Item><Text strong>Price: {props.data.Price}</Text> </List.Item>
+                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {props.data.DateTime}</Text> </List.Item>                
                         </List>}
               />        
           </Card>

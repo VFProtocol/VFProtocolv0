@@ -111,7 +111,7 @@ var requestOptions = {
     setTimeout(() => {
       setRenderState(true);
       console.log("RENDER STATE CHANGE ",renderState)
-    }, "500")}
+    }, "1000")}
  },[apiState]);
 
   useEffect(() => {
