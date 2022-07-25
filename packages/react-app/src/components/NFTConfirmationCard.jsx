@@ -39,7 +39,7 @@ let seller = props.address;
 const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Awaiting Your Confirmation"
-const jsonData = JSON.parse(localStorage.getItem('choice')); 
+const jsonData = JSON.parse(localStorage.getItem('choice')); //Retrieve Handshake data from localStorage
 const data = 
   {   collectionAddress: jsonData.address,
       collection: jsonData.url,
