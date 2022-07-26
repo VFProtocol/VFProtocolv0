@@ -618,10 +618,10 @@ const withdrawFunds = async () => {
           <Link to="/mvpconfirm">MVP Confirmation Page</Link>
         </Menu.Item> */}
         <Menu.Item key="/PendingSales">
-          <Link to="/PendingSales">Pending Sales</Link>
+          <Link to="/PendingSales">Your Sales</Link>
         </Menu.Item>
         <Menu.Item key="/PendingOffers">
-          <Link to="/PendingOffers">Pending Offers</Link>
+          <Link to="/PendingOffers">Your Buys</Link>
         </Menu.Item>
         <Menu.Item key="/Redeem">
           <Link to="/Redeem">Redeem Funds</Link>
@@ -915,7 +915,9 @@ const withdrawFunds = async () => {
         </Route>
         <Route exact path="/PendingOffers">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-          <HCardBuyerList/>
+          <HCardBuyerList
+          address={address}
+          />
           </div>
           </Route>
           <Route exact path="/PendingSales">

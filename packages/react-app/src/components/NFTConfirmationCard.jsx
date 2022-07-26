@@ -134,7 +134,7 @@ console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, 
           ]}
         >
           <Meta
-            title={<Title level={3}><a href={data.collection}>{data.Title}</a> - {data.Tokenid}</Title>}
+            title={<Title level={3}><a href={data.NFTURL}>{data.Title}</a> - #{data.Tokenid}</Title>}
             description={<List
                         size="small"
                         itemLayout="vertical"

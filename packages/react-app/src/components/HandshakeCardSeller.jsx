@@ -57,14 +57,15 @@ let HSTime = new Date(props.data.DateTime);
 let now = new Date();
 let timeDiff = now - HSTime;
 let minutesLeft = Math.ceil(timeDiff / (1000 * 60));
-if (minutesLeft <= 0) {
+console.log("MINUTES", minutesLeft)
+if (minutesLeft >= 60) {
   labelId = "Handshake Expired";
   minutesLeft=0; //No Time Left        
 }
 else {
   minutesLeft = 60 - minutesLeft;
 }
-
+/// End Time Remaining on Handshake -------------------------------------------------
 
   return (
       <>
