@@ -259,6 +259,7 @@ console.log("📟 Transfer events:", transferEvents);
 const sellEvents = useEventListener(readContracts, "BasicSale", "SaleInit", localProvider, 1);
 const buyEvents = useEventListener(readContracts, "BasicSale", "BuyInit", localProvider, 1);
 const successConfirm = <Alert message="Success Text" type="success" />; //Create Alert
+
 if (sellEvents.length > 0) {  
   console.log("SELL EVENTS: ",sellEvents)  
   console.log("Sell Events latest Index:", sellEvents?.length-1, " or ", sellEvents[sellEvents.length-1].args.index, " converted ");    
@@ -998,6 +999,7 @@ const withdrawFunds = async () => {
           <Route exact path="/transferspecial"> 
           {/* Turn into Cards */}
           <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+              console.log("Sell Events", sellEvents);
               <List
                 bordered
                 dataSource={sellEvents}
@@ -1016,6 +1018,8 @@ const withdrawFunds = async () => {
                         >
                           Cancel Handshake
                         </Button>
+                        <script>console.log("Sell Items", item);</script>
+                        
                     </List.Item>
                   );
                 }}
