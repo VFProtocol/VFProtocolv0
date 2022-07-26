@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Button, Card, List, Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
 import {
-  ClockCircleOutlined
+  ClockCircleOutlined, ConsoleSqlOutlined
 } from "@ant-design/icons";
 
 /**
@@ -24,57 +24,82 @@ import {
 **/
 
 export default function HandshakeCardBuyer(props) {
-const { Text, Title } = Typography;
-const { Meta } = Card;
-const labelId = "Awaiting Your Acceptance"
-const data = 
-  {
-      collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-      imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-      Title: "mfer",
-      Tokenid: "120",
-      Seller: "MartialG.ETH",
-    Price: "2.5 ETH",
-    TimeLeft: "60 Minutes"
+  const { Text, Title } = Typography;
+  const { Meta } = Card;
+  const { ethers } = require("ethers");
+  
+  var labelId = "Pending";
+  if (props.data.Status === "Pending") {
+  labelId = "Awaiting Your Approval";
+  // EDIT COLORS AS WELL
+  //BLUE
+  } else if (props.data.Status === "Accepted") {
+  labelId = "Accepted";
+  // Green
+  } else {
+  labelId = "Error";
+  // GREY
   }
-
-
-
-
-  return (
-      <>
-      <Badge.Ribbon text={labelId} placement="start">
-        <Card
-          cover={
-            <img
-              alt="NFT"
-              src={data.imageURL}
-            />
-          }
-          actions={[
-            <>
+  
+  
+  
+  console.log("props", props, props.data)
+  // Create Seller Link
+  const sellerLink = "https://etherscan.io/address/"+props.data.Seller;
+  // Convert price back to ETH
+  // const price = web3.utils.fromWei(props.data.Price, 'ether');
+  let priceString = ethers.BigNumber.from(props.data.Price.toString());
+  const price = ethers.utils.formatEther(priceString);
+  //props.data.Price / 1000000000000000000;
+  
+  // Get Time Remaining on Handshake
+  let HSTime = new Date(props.data.DateTime);
+  let now = new Date();
+  let timeDiff = now - HSTime;
+  let minutesLeft = Math.ceil(timeDiff / (1000 * 60));
+  console.log("MINUTES", minutesLeft)
+  if (minutesLeft >= 60) {
+    labelId = "Handshake Expired";
+    minutesLeft=0; //No Time Left        
+  }
+  else {
+    minutesLeft = 60 - minutesLeft;
+  }
+  /// End Time Remaining on Handshake -------------------------------------------------
+  
+    return (
+        <>
+        <Badge.Ribbon text={labelId} placement="start">
+          <Card
+            cover={
+              <img
+                alt="NFT"
+                src={props.data.ImageURL}
+              />
+            }
+            actions={[
+              <>
             <Button type="primary" onClick={console.log("Click Accept")} style={{ background: "green", borderColor: "green"}}>Accept Handshake</Button>
             <Button onClick={console.log("Click Reject")}>Reject</Button>
-            </>
-          ]}
-        >
-          <Meta
-            title={<Text><a href={data.collection}>{data.Title}</a> - {data.Tokenid}</Text>}
-            description={<List
-                        size="small"
-                        itemLayout="vertical"
-                        >
-                          <List.Item><Text strong>Seller: {data.Seller}</Text> </List.Item>
-                          <List.Item><Text strong>Price: {data.Price}</Text> </List.Item>
-                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {data.TimeLeft}</Text> </List.Item>                
-                        </List>}
-              />        
-          </Card>
-      </Badge.Ribbon>
-    </>
-  );
-}
-
+              </>
+            ]}
+          >
+            <Meta
+              title={<Text><a href={props.data.NFTURL}>{props.data.CollectionTitle}</a> - #{props.data.TokenID}</Text>}
+              description={<List
+                          size="small"
+                          itemLayout="vertical"
+                          >
+                            <List.Item><Text strong>Seller: <a href={sellerLink}>{props.data.Seller}</a></Text> </List.Item>
+                            <List.Item><Text strong>Price: {price} ETH</Text> </List.Item>
+                            <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {minutesLeft} Minutes</Text> </List.Item>                
+                          </List>}
+                />        
+            </Card>
+        </Badge.Ribbon>
+      </>
+    );
+  }
 
 
 

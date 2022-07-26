@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import {ExperimentOutlined} from "@ant-design/icons";
 import {
   useBalance,
+  useBlockNumber,
   useContractLoader,
   useContractReader,
   useGasPrice,
@@ -19,6 +20,7 @@ import {
   Address,
   AddressInput,
   Contract,
+  Events,
   Faucet,
   GasGauge,
   Header,
@@ -47,58 +49,6 @@ import { Transactor, Web3ModalSetup } from "./helpers";
 import { Home, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
-
-//PROP TESTING AREA
-const data1 = 
-  [{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "120",
-  }  ,{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "121",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "122",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "123",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "124",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "125",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "126",
-  },{
-    collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-    imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-    Title: "mfer",
-    Tokenid: "127",
-  }]
-
-// Function to add selection property to each object
-for (let i=0;i<data1.length;i++) {
-  data1[i].selection = false;
-}
-  data1[6].selection = true;
-
-const data2 = data1[0];
 
 
 // END PROP TESTING AREA
@@ -239,6 +189,11 @@ function App(props) {
   const tx = Transactor(userSigner, gasPrice);
   // 🏗 scaffold-eth is full of handy hooks like this one to get your balance:
   const yourLocalBalance = useBalance(localProvider, address);
+  
+  // Record Block Number for later use in NFTConfirmationCard for AWS storage
+  const blockNum = useBlockNumber(localProvider);
+  // console.log("blockNum", blockNum);
+
   // Just plug in different 🛰 providers to get your balance on different chains:
   const yourMainnetBalance = useBalance(mainnetProvider, address);
   // const contractConfig = useContractConfig();
@@ -305,12 +260,12 @@ const sellEvents = useEventListener(readContracts, "BasicSale", "SaleInit", loca
 const buyEvents = useEventListener(readContracts, "BasicSale", "BuyInit", localProvider, 1);
 const successConfirm = <Alert message="Success Text" type="success" />; //Create Alert
 
-if (sellEvents.length > 0) {
-  console.log("SELL EVENTS: ",sellEvents)
-  console.log("Sell Events latest Index:", sellEvents?.length-1, " or ", sellEvents[sellEvents.length-1].args.index, " converted ");  
-  let v = ethers.BigNumber.from(sellEvents[sellEvents.length-1].args.index);
-  console.log("Sell Events latest Index:", v.toNumber());
-}
+if (sellEvents.length > 0) {  
+  console.log("SELL EVENTS: ",sellEvents)  
+  console.log("Sell Events latest Index:", sellEvents?.length-1, " or ", sellEvents[sellEvents.length-1].args.index, " converted ");    
+  let v = ethers.BigNumber.from(sellEvents[sellEvents.length-1].args.index);  
+  console.log("Sell Events latest Index:", v.toNumber());}
+
 //
 // 🧠 This effect will update yourCollectibles by polling when your balance changes
 //
@@ -321,7 +276,7 @@ const [approving, setApproving] = useState(false);
 const [moving, setMoving] = useState(false);
 const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
-const [nftContractAddress, setnftContractAddress] = useState("0xNFTContractAddressGoesHere");
+const [nftContractAddress, setnftContractAddress] = useState("0x5fbdb2315678afecb367f032d93f642f64180aa3"); // OLD UX
 const [newToken, setNewToken] = useState();
 const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
 const [dealPrice, setPrice] = useState(); //This sets the seller's price
@@ -518,7 +473,49 @@ const result = tx(
   );
 };
 
-// Function to approve Selected Token for Transfer by Seller
+// NEW CONTRACT APPROVAL + SUBMISSION PATTERN --------------------------------------------------------------------------------
+// New Function to approve Selected Token for Transfer by Seller in UX FLOW - WORKS WITH RINKEBY AND MAINNET
+const approveNew = async () => {
+  const jsonData = JSON.parse(localStorage.getItem('choice')); //Retrieve Handshake data from localStorage
+  console.log("contractAddress ", jsonData.address); //Retrieve address
+  const selectNFTAddress = jsonData.address; //Retrieve address
+  const selectTokenId = jsonData.token_id; //Retrieve id
+
+  readContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, localProvider);
+  writeContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, userSigner);
+  
+  // Send user to next page while approving tokens
+  window.location.href='/mvpconfirm'; //THIS IS THE LINK TO THE CONFIRMATION PAGE
+
+  
+  // Does nothing until on correct network and contract is deployed
+  const result = tx(
+    writeContracts &&
+      writeContracts.selectNFTContractAddress &&
+      writeContracts.selectNFTContractAddress.approve(vfprotocolv0, selectTokenId), //Might need to add .wait() when on rinkeby/mainnet https://stackoverflow.com/questions/64951267/unhandled-rejection-error-call-revert-exception
+    update => {
+      console.log("📡 Transaction Update:", update);
+      if (update && (update.status === "confirmed" || update.status === 1)) {
+        console.log(" 🍾 Transaction " + update.hash + " finished!");
+        console.log(
+          " ⛽️ " +
+            update.gasUsed +
+            "/" +
+            (update.gasLimit || update.gas) +
+            " @ " +
+            parseFloat(update.gasPrice) / 1000000000 +
+            " gwei",
+        );
+      }
+    },
+  );
+  };
+
+
+
+
+//OLD CONTRACT APPROVAL + SUBMISSION PATTERN --------------------------------------------------------------------------------
+// OLD Function to approve Selected Token for Transfer by Seller in UX FLOW - JUST WORKS WITH LOCAL CHAIN
 const approve = async () => {
 const targetToken = newToken; 
 readContracts.nftContractAddress = new ethers.Contract(nftContractAddress, ERC721ABI, localProvider);
@@ -622,10 +619,10 @@ const withdrawFunds = async () => {
           <Link to="/mvpconfirm">MVP Confirmation Page</Link>
         </Menu.Item> */}
         <Menu.Item key="/PendingSales">
-          <Link to="/PendingSales">Pending Sales</Link>
+          <Link to="/PendingSales">Your Sales</Link>
         </Menu.Item>
         <Menu.Item key="/PendingOffers">
-          <Link to="/PendingOffers">Pending Offers</Link>
+          <Link to="/PendingOffers">Your Buys</Link>
         </Menu.Item>
         <Menu.Item key="/Redeem">
           <Link to="/Redeem">Redeem Funds</Link>
@@ -867,8 +864,7 @@ const withdrawFunds = async () => {
             shape="round"
             size="large"
             onClick={() => {
-              // approve();
-              window.location.href='/mvpconfirm';
+              approveNew();
             }}
             
           >
@@ -891,7 +887,11 @@ const withdrawFunds = async () => {
             </Col>
             <Col >
             <NFTConfirmationCard
-            address={address}/>
+            address={address}
+            readContracts={readContracts}
+            localProvider={localProvider}
+            blockNum = {blockNum}
+            />
             </Col>
             <Col >
             
@@ -916,12 +916,16 @@ const withdrawFunds = async () => {
         </Route>
         <Route exact path="/PendingOffers">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-          <HCardBuyerList/>
+          <HCardBuyerList
+          address={address}
+          />
           </div>
           </Route>
           <Route exact path="/PendingSales">
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-          <HCardSellerList/>
+          <HCardSellerList
+            address={address}
+          />
           </div>
         </Route>
         <Route exact path="/Redeem">
