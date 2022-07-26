@@ -2,7 +2,7 @@ import React from "react";
 import { Badge, Button, Card, List, Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
 import {
-  ClockCircleOutlined
+  ClockCircleOutlined, ConsoleSqlOutlined
 } from "@ant-design/icons";
 
 /**
@@ -37,20 +37,11 @@ labelId = "Awaiting Buyer Acceptance"
 labelId = "Accepted";
 // Green
 } else {
-labelId = "Expired";
+labelId = "Error";
 // GREY
 }
 
-const data = 
-  {
-      collection: "https://center.app/collections/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123",
-      imageURL: "https://cdn.center.app/1/0x79FCDEF22feeD20eDDacbB2587640e45491b757f/123/931be9a4a1f7512c9cf3a1ecb4ad7fca5bed6efaf5cdec7cd1425d223072be98.png",
-      Title: "mfer",
-      Tokenid: "120",
-      Buyer: "Vitalik.ETH",
-    // Price: "2.5 ETH",
-    TimeLeft: "60 Minutes"
-  }
+
 
 console.log("props", props, props.data)
 // Create Buyer Link
@@ -61,6 +52,18 @@ let priceString = ethers.BigNumber.from(props.data.Price.toString());
 const price = ethers.utils.formatEther(priceString);
 //props.data.Price / 1000000000000000000;
 
+// Get Time Remaining on Handshake
+let HSTime = new Date(props.data.DateTime);
+let now = new Date();
+let timeDiff = now - HSTime;
+let minutesLeft = Math.ceil(timeDiff / (1000 * 60));
+if (minutesLeft <= 0) {
+  labelId = "Handshake Expired";
+  minutesLeft=0; //No Time Left        
+}
+else {
+  minutesLeft = 60 - minutesLeft;
+}
 
 
   return (
@@ -70,7 +73,7 @@ const price = ethers.utils.formatEther(priceString);
           cover={
             <img
               alt="NFT"
-              src={data.imageURL}
+              src={props.data.ImageURL}
             />
           }
           actions={[
@@ -80,14 +83,14 @@ const price = ethers.utils.formatEther(priceString);
           ]}
         >
           <Meta
-            title={<Text><a href={props.CollectionAddress}>{data.Title}</a> - {props.data.TokenID}</Text>}
+            title={<Text><a href={props.data.NFTURL}>{props.data.CollectionTitle}</a> - #{props.data.TokenID}</Text>}
             description={<List
                         size="small"
                         itemLayout="vertical"
                         >
                           <List.Item><Text strong>Buyer: <a href={buyerLink}>{props.data.Buyer}</a></Text> </List.Item>
-                          <List.Item><Text strong>Price: {price}</Text> </List.Item>
-                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {props.data.DateTime}</Text> </List.Item>                
+                          <List.Item><Text strong>Price: {price} ETH</Text> </List.Item>
+                          <List.Item><Text strong> <ClockCircleOutlined /> Time Left: {minutesLeft} Minutes</Text> </List.Item>                
                         </List>}
               />        
           </Card>

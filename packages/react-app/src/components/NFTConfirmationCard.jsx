@@ -40,10 +40,11 @@ const { Text, Title } = Typography;
 const { Meta } = Card;
 const labelId = "Awaiting Your Confirmation"
 const jsonData = JSON.parse(localStorage.getItem('choice')); //Retrieve Handshake data from localStorage
+console.log("jsonData", jsonData)
 const data = 
-  {   collectionAddress: jsonData.address,
-      collection: jsonData.url,
-      imageURL: jsonData.small_preview_image_url,
+  {   CollectionAddress: jsonData.address,
+      NFTURL: jsonData.url,
+      ImageURL: jsonData.small_preview_image_url,
       Title: jsonData.collection_name,
       Tokenid: jsonData.token_id,
       Buyer: JSON.parse(localStorage.getItem('buyer')),
@@ -55,7 +56,7 @@ console.log(JSON.parse(localStorage.getItem('choice')));
 
 
 // API Call to record transaction in AWS
-var callAWSAPI = async (nftSeller,txIndex, collectionAddress,TokenID,nftBuyer,nftPrice,approxblockNum) => {
+var callAWSAPI = async (nftSeller,txIndex, collectionTitle, nftURL, imageURL, collectionAddress,TokenID,nftBuyer,nftPrice,approxblockNum) => {
   
   // instantiate a headers object
   var myHeaders = new Headers();
@@ -65,7 +66,10 @@ var callAWSAPI = async (nftSeller,txIndex, collectionAddress,TokenID,nftBuyer,nf
   var raw = JSON.stringify(
     {"nftSeller":nftSeller,
       "TransactionID":txIndex, //Need to get this from the blockchain
-  "nftCollectionAddress":collectionAddress,
+      "collectionTitle":collectionTitle,
+      "nftURL":nftURL,
+      "imageURL":imageURL,
+      "nftCollectionAddress":collectionAddress,
   "nftTokenID":TokenID,
   "nftBuyer":nftBuyer,
   "nftPrice":nftPrice,
@@ -102,7 +106,7 @@ else {var handshakeIndex = 0;} //If no Handshakes, set to 0
 let gweiPrice = data.Price * 1e18;
 
 
-console.log("Handshake Call: ",seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum);
+console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum);
   return (
       <>
       <Badge.Ribbon text={labelId} placement="start" color="grey">
@@ -110,14 +114,14 @@ console.log("Handshake Call: ",seller, handshakeIndex, data.collectionAddress, d
           cover={
             <img
               alt="NFT"
-              src={data.imageURL}
+              src={data.ImageURL}
             />
           }
           actions={[
             <>
             {/* <a href="/PendingSales"> */}
               <Button type="primary" onClick={
-                ()=>{callAWSAPI(seller, handshakeIndex, data.collectionAddress, data.Tokenid, data.Buyer, gweiPrice, approxblockNum); //Call API to record transaction                
+                ()=>{callAWSAPI(seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, gweiPrice, approxblockNum); //Call API to record transaction                
                 }} 
               style={{ background: "green", borderColor: "green"}}>
                 Submit Handshake</Button>
