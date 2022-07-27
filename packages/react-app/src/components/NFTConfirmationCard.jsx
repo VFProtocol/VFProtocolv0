@@ -54,6 +54,16 @@ const data =
 const buyerLink = "https://etherscan.io/address/"+data.Buyer;
 console.log(JSON.parse(localStorage.getItem('choice')));
 
+// "Submit to VFP Controller" Function imported from Props
+
+
+
+
+
+
+
+
+
 
 // API Call to record transaction in AWS
 var callAWSAPI = async (nftSeller,txIndex, collectionTitle, nftURL, imageURL, collectionAddress,TokenID,nftBuyer,nftPrice,approxblockNum) => {
@@ -88,7 +98,7 @@ var callAWSAPI = async (nftSeller,txIndex, collectionTitle, nftURL, imageURL, co
   .then(result => alert(JSON.parse(result).body))
   .catch(error => console.log('error', error));
 
-  window.location.href = "/PendingSales";
+  // window.location.href = "/PendingSales";
 }
 
 // Ethers.js call to get the last Handshake Index for SaleInit AWS POST call
@@ -104,6 +114,7 @@ else {var handshakeIndex = 0;} //If no Handshakes, set to 0
 
 //Convert before sending to AWS & EVM
 let gweiPrice = data.Price * 1e18;
+
 
 
 console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum);
@@ -122,7 +133,8 @@ console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, 
             {/* <a href="/PendingSales"> */}
               <Button type="primary" onClick={
                 ()=>{callAWSAPI(seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, gweiPrice, approxblockNum); //Call API to record transaction                
-                }} 
+                props.submitHandshake(); //Calls function in App.js to submit Handshake to VFP Controller
+              }} 
               style={{ background: "green", borderColor: "green"}}>
                 Submit Handshake</Button>
                 {/* </a> */}

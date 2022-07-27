@@ -277,7 +277,7 @@ const [moving, setMoving] = useState(false);
 const [count, setCount] = useState(1);
 const [transferToAddresses, setTransferToAddresses] = useState({});
 const [nftContractAddress, setnftContractAddress] = useState("0x5fbdb2315678afecb367f032d93f642f64180aa3"); // OLD UX
-const [newToken, setNewToken] = useState();
+const [newToken, setNewToken] = useState(1);
 const [buyer, setBuyer] = useState("0xBuyerAddressGoesHere");
 const [dealPrice, setPrice] = useState(); //This sets the seller's price
 const [index,setIndex] = useState(); //This sets the Buyer's index to accept <- Need to pass this in automatically somehow
@@ -473,29 +473,32 @@ const result = tx(
   );
 };
 
-// NEW CONTRACT APPROVAL + SUBMISSION PATTERN --------------------------------------------------------------------------------
-// New Function to approve Selected Token for Transfer by Seller in UX FLOW - WORKS WITH RINKEBY AND MAINNET
+// 1. NEW CONTRACT APPROVAL + SUBMISSION PATTERN --------------------------------------------------------------------------------
+// New APPROVE Function for Selected Token for Transfer by Seller in UX FLOW - WORKS WITH RINKEBY AND MAINNET
 const approveNew = async () => {
   const jsonData = JSON.parse(localStorage.getItem('choice')); //Retrieve Handshake data from localStorage
   console.log("contractAddress ", jsonData.address); //Retrieve address
-  const selectNFTAddress = jsonData.address; //Retrieve address
-  const selectTokenId = jsonData.token_id; //Retrieve id
+  //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
+  const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
+  // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
+  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
 
   readContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, localProvider);
   writeContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, userSigner);
   
-  // Send user to next page while approving tokens
-  window.location.href='/mvpconfirm'; //THIS IS THE LINK TO THE CONFIRMATION PAGE
 
-  
   // Does nothing until on correct network and contract is deployed
   const result = tx(
     writeContracts &&
       writeContracts.selectNFTContractAddress &&
-      writeContracts.selectNFTContractAddress.approve(vfprotocolv0, selectTokenId), //Might need to add .wait() when on rinkeby/mainnet https://stackoverflow.com/questions/64951267/unhandled-rejection-error-call-revert-exception
+      writeContracts.selectNFTContractAddress.approve(vfprotocolv0, selectTokenId).then(()=>{
+        window.location.href='/mvpconfirm'}), //IMPORTANT BIT DON'T DELETE
+       
+        //Might need to add .wait() when on rinkeby/mainnet https://stackoverflow.com/questions/64951267/unhandled-rejection-error-call-revert-exception
     update => {
       console.log("📡 Transaction Update:", update);
       if (update && (update.status === "confirmed" || update.status === 1)) {
+        
         console.log(" 🍾 Transaction " + update.hash + " finished!");
         console.log(
           " ⛽️ " +
@@ -508,8 +511,88 @@ const approveNew = async () => {
         );
       }
     },
+  )
+  };
+
+// 2. NEW SUBMISSION FUNCTION - This submits the Handshake to VFProtocolv0 contract
+// with Buyer, Price, NFT Contract Address, Token ID as inputs
+// These inputs are stored in a mapping in VFProtocolv0 
+const submitHandshakeNew = async () => {  
+  
+  const jsonData = JSON.parse(localStorage.getItem('choice')); //Retrieve Handshake data from localStorage
+  console.log("contractAddress ", jsonData.address); //Retrieve address
+
+  const selectBuyer = JSON.parse(localStorage.getItem('buyer')); //Retrieve Buyer address
+  console.log("selectBuyer ", selectBuyer); //LOG Buyer address
+  
+  const selectPrice = ethers.BigNumber.from(JSON.parse(localStorage.getItem('dealPrice'))); //Retrieve Price
+  console.log("selectPrice ", selectPrice); //LOG Price
+
+  //Convert before sending to EVM
+  const selectGweiPrice = ethers.utils.parseEther(selectPrice.toString()) // Convert to gwei;
+  console.log("selectGweiPrice ", selectGweiPrice); //LOG gweiPrice
+
+ 
+  // EDIT THIS WHEN DEPLOYED TO RINKEBY
+  //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
+  const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
+  // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
+  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+
+  
+  
+  const result = tx(
+    writeContracts &&
+      writeContracts.BasicSale &&
+      writeContracts.BasicSale.saleInit(selectBuyer, selectGweiPrice, selectNFTAddress, selectTokenId).then(()=>{
+        window.location.href='/PendingSales'}), //IMPORTANT BIT DON'T DELETE,
+    update => {
+      console.log("📡 Transaction Update:", update);
+    },
+    // alert("Handshake Successfully Shook - Congrats!")
+    );
+    if(result) alert("Handshake Successfully Shook - Congrats!") 
+  };
+
+
+
+
+
+  // NOT FIXED YET
+// 3. NEW ACCEPT HANDSHAKE FUNCTION - This allows buyer to accept Handshake
+// It takes index of transaction and payment value as inputs 
+// These will be autofilled in MVP from reading contract subgraph 
+const acceptNew = async () => {
+  const result = tx(
+    writeContracts &&
+      writeContracts.BasicSale &&
+      writeContracts.BasicSale.buyInit(index, {value:payment}),
+    update => {
+      console.log("📡 Transaction Update:", update);
+    },
   );
   };
+
+
+  // NOT FIXED YET
+// 4. NEW WITHDRAW FUNCTION This lets the seller withdraw their funds after they sell something.
+// They can also check their balance with this widget (not yet) in the Redeem Page. Need to update this with persistent state
+// for each user.
+
+const withdrawFundsNew = async () => {
+  const result = tx(
+    writeContracts &&
+      writeContracts.BasicSale &&
+      writeContracts.BasicSale.withdraw(),
+    update => {
+      console.log("📡 Transaction Update:", update);
+    },
+    // alert("Handshake Successfully Shook - Congrats!")
+    );
+    if(result) alert("ETH Withdrawn - Congrats!") 
+  };
+
+
 
 
 
@@ -814,22 +897,6 @@ const withdrawFunds = async () => {
                 }}
               />
             </div>
-            <div>
-            <div className="site-card-wrapper">
-            <Row gutter={16}>
-              <Col span={8}>
-              <HandshakeCardSeller />
-              </Col>
-              <Col span={8}>
-              <HandshakeCardBuyer />
-              </Col>
-              <Col span={8}>
-              <HandshakeCardSeller />
-              </Col>
-              </Row>
-            </div>
-            <HCardBuyerList />
-            </div>
           </Route>
 
 
@@ -888,9 +955,11 @@ const withdrawFunds = async () => {
             <Col >
             <NFTConfirmationCard
             address={address}
+            ensProvider={mainnetProvider}
             readContracts={readContracts}
             localProvider={localProvider}
             blockNum = {blockNum}
+            submitHandshake = {submitHandshakeNew}
             />
             </Col>
             <Col >
