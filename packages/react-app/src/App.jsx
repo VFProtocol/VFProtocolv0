@@ -481,7 +481,8 @@ const approveNew = async () => {
   //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
   const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
   // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
-  const selectTokenId = 2 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  console.log("token_id ", selectTokenId); //Retrieve id
 
   readContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, localProvider);
   writeContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, userSigner);
@@ -537,7 +538,7 @@ const submitHandshakeNew = async () => {
   //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
   const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
   // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
-  const selectTokenId = 2 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
 
   
   

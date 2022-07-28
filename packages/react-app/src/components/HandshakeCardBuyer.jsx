@@ -58,10 +58,11 @@ export default function HandshakeCardBuyer(props) {
   const sellerLink = "https://etherscan.io/address/"+props.data.Seller;
   // Convert price back to ETH
   // const price = web3.utils.fromWei(props.data.Price, 'ether');
-  let priceString = ethers.BigNumber.from(props.data.Price.toString());
+  let priceString = ethers.BigNumber.from(props.data.Price.toString()); //REMOVE TOSTRING WHEN DB IS FIXED
   const price = ethers.utils.formatEther(priceString);
   //props.data.Price / 1000000000000000000;
-  
+  console.log("PRICEEEEEEE", price, props.data.Price, props.data.Price.toString(),priceString);
+
   // Get Time Remaining on Handshake
   let HSTime = new Date(props.data.DateTime);
   let now = new Date();
@@ -84,13 +85,9 @@ export default function HandshakeCardBuyer(props) {
 // These will be autofilled in MVP from reading contract subgraph 
 const acceptNew = async () => {
   //
-  const setIndex = 1;
-  const sPrice = ethers.BigNumber.from("1000000000000000000");
-  const selectPrice = sPrice.toString();
-  // const selectPrice = ethers.BigNumber.from(JSON.parse(localStorage.getItem('dealPrice'))); //Retrieve Price  from JSON response
+  const setIndex = props.data.TransactionID.toString(); //This is the index of the transaction grabbed from AWS, REMOVE toString() when AWS is fixed
+  const priceAccept = props.data.Price.toString(); // This is the price of the handshake grabbed from AWS, REMOVE toString() when AWS DB returns a string 
 
-  console.log("setIndex ", setIndex); //LOG Price
-  console.log("selectPrice ", selectPrice); //LOG Price
   
 
   //Convert before sending to EVM
@@ -100,7 +97,7 @@ const acceptNew = async () => {
   const result = tx(
     writeContracts &&
       writeContracts.BasicSale &&
-      writeContracts.BasicSale.buyInit(setIndex, {value:selectPrice}),
+      writeContracts.BasicSale.buyInit(setIndex, {value:priceAccept}),
     update => {
       console.log("📡 Transaction Update:", update);
     },
