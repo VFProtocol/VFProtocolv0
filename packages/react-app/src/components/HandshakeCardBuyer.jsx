@@ -87,12 +87,6 @@ const acceptNew = async () => {
   //
   const setIndex = props.data.TransactionID.toString(); //This is the index of the transaction grabbed from AWS, REMOVE toString() when AWS is fixed
   const priceAccept = props.data.Price.toString(); // This is the price of the handshake grabbed from AWS, REMOVE toString() when AWS DB returns a string 
-
-  
-
-  //Convert before sending to EVM
-  // const selectGweiPayment = ethers.utils.parseEther(selectPrice.toString()) // Convert to gwei;
-  // console.log("selectGweiPrice ", selectGweiPrice); //LOG gweiPrice
   
   const result = tx(
     writeContracts &&

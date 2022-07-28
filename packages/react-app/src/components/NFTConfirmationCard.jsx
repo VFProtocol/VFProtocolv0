@@ -33,6 +33,7 @@ const localProvider = props.localprovider;
 // Get Block Number - Might not be 100% accurate, but only needs to be close enough
 // Will get stored in AWS DynamoDB so you can use it later to find most recent SaleInit Event
 let approxblockNum = props.blockNum;
+let approxBlockNumString = approxblockNum.toString(); //convert to string
 // Get seller address from props
 let seller = props.address;
 
@@ -85,6 +86,7 @@ var callAWSAPI = async (nftSeller,txIndex, collectionTitle, nftURL, imageURL, co
   "nftPrice":nftPrice,
   "txStatus":"Pending", //All tx are pending until they are confirmed by blockchain call
   "approxBlockNum":approxblockNum});
+  console.log("RAW", raw);
   // create a JSON object with parameters for API call and store in a variable
   var requestOptions = {
       method: 'POST',
@@ -109,15 +111,17 @@ const sellEvents = useEventListener(props.readContracts, "BasicSale", "SaleInit"
 if (sellEvents.length > 0) {
   let lastHandshake = ethers.BigNumber.from(sellEvents[sellEvents.length-1].args.index); //Get last Handshake Index for next Handshake 
   var handshakeIndex = lastHandshake.toNumber() + 1; //Convert to Number and add 1 to calculate current anticipated Handshake index
+  // var handshakeIndexString = handshakeIndex.toString(); //Convert to String BUT CAN'T USE STRING UNTIL DYNAMODB SECONDARY KEY IS SWITCHED FROM NUMBER TO STRING
 }
 else {var handshakeIndex = 0;} //If no Handshakes, set to 0
 
 //Convert before sending to AWS & EVM
-let gweiPrice = data.Price * 1e18;
+let gweiPrice = ethers.utils.parseEther(data.Price);
+// Convert to gweiPrice to string
+let gweiPriceString = gweiPrice.toString();
 
 
-
-console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, data.Price, approxblockNum);
+console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, gweiPriceString, approxBlockNumString);
   return (
       <>
       <Badge.Ribbon text={labelId} placement="start" color="grey">
@@ -132,7 +136,7 @@ console.log("Handshake Call: ",seller, handshakeIndex, data.Title, data.NFTURL, 
             <>
             {/* <a href="/PendingSales"> */}
               <Button type="primary" onClick={
-                ()=>{callAWSAPI(seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, gweiPrice, approxblockNum); //Call API to record transaction                
+                ()=>{callAWSAPI(seller, handshakeIndex, data.Title, data.NFTURL, data.ImageURL, data.CollectionAddress, data.Tokenid, data.Buyer, gweiPriceString, approxBlockNumString); //Call API to record transaction                
                 props.submitHandshake(); //Calls function in App.js to submit Handshake to VFP Controller
               }} 
               style={{ background: "green", borderColor: "green"}}>

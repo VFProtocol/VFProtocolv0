@@ -481,7 +481,7 @@ const approveNew = async () => {
   //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
   const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
   // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
-  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  const selectTokenId = 2 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
   console.log("token_id ", selectTokenId); //Retrieve id
 
   readContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, localProvider);
@@ -538,7 +538,7 @@ const submitHandshakeNew = async () => {
   //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
   const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
   // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
-  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  const selectTokenId = 2 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
 
   
   
@@ -559,7 +559,7 @@ const submitHandshakeNew = async () => {
 
 
 
-// NOT FIXED YET - NEW ACCEPT HANDSHAKE FUNCTION ACTUALLY LIVES IN HANDSHAKE BUYER CARD
+// NEW ACCEPT HANDSHAKE FUNCTION ACTUALLY LIVES IN HANDSHAKE BUYER CARD
 // 3. NEW ACCEPT HANDSHAKE FUNCTION - This allows buyer to accept Handshake
 // It takes index of transaction and payment value as inputs 
 // These will be autofilled in MVP from reading contract subgraph 
@@ -1029,7 +1029,7 @@ const withdrawFunds = async () => {
                     shape="round"
                     size="large"
                     onClick={() => {
-                      withdrawFunds(); 
+                      withdrawFundsNew(); 
                     }}
                   >
                     Withdraw Funds
