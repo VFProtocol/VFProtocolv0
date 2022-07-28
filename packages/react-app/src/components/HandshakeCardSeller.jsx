@@ -29,16 +29,19 @@ const { Meta } = Card;
 const { ethers } = require("ethers");
 
 var labelId = "Pending";
+var colorState = "blue";
 if (props.data.Status === "Pending") {
 labelId = "Awaiting Buyer Acceptance"
 // EDIT COLORS AS WELL
 //BLUE
 } else if (props.data.Status === "Accepted") {
 labelId = "Accepted";
+colorState = "green";
 // Green
 } else {
 labelId = "Error";
-// GREY
+// Red
+colorState = "red";
 }
 
 
@@ -60,7 +63,8 @@ let minutesLeft = Math.ceil(timeDiff / (1000 * 60));
 console.log("MINUTES", minutesLeft)
 if (minutesLeft >= 60) {
   labelId = "Handshake Expired";
-  minutesLeft=0; //No Time Left        
+  minutesLeft=0; //No Time Left
+  colorState = "gray";        
 }
 else {
   minutesLeft = 60 - minutesLeft;
@@ -69,7 +73,7 @@ else {
 
   return (
       <>
-      <Badge.Ribbon text={labelId} placement="start">
+      <Badge.Ribbon text={labelId} placement="start" color={colorState}>
         <Card
           cover={
             <img

@@ -39,15 +39,18 @@ export default function HandshakeCardBuyer(props) {
   
 
   var labelId = "Pending";
+  var colorState = "blue";
   if (props.data.Status === "Pending") {
   labelId = "Awaiting Your Approval";
   // EDIT COLORS AS WELL
   //BLUE
   } else if (props.data.Status === "Accepted") {
   labelId = "Accepted";
+  colorState = "green";
   // Green
   } else {
   labelId = "Error";
+  colorState = "red";
   // GREY
   }
   
@@ -71,7 +74,8 @@ export default function HandshakeCardBuyer(props) {
   console.log("MINUTES", minutesLeft)
   if (minutesLeft >= 60) {
     labelId = "Handshake Expired";
-    minutesLeft=0; //No Time Left        
+    minutesLeft=0; //No Time Left 
+    colorState = "gray";         
   }
   else {
     minutesLeft = 60 - minutesLeft;
@@ -100,24 +104,9 @@ const acceptNew = async () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return (
         <>
-        <Badge.Ribbon text={labelId} placement="start">
+        <Badge.Ribbon text={labelId} placement="start" color={colorState}>
           <Card
             cover={
               <img
