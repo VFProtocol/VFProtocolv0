@@ -481,7 +481,7 @@ const approveNew = async () => {
   //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
   const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
   // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
-  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  const selectTokenId = 2 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
 
   readContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, localProvider);
   writeContracts.selectNFTContractAddress = new ethers.Contract(selectNFTAddress, ERC721ABI, userSigner);
@@ -537,7 +537,7 @@ const submitHandshakeNew = async () => {
   //TEMP MUTE UNTIL RINKEBY const selectNFTAddress = jsonData.address; //Retrieve address
   const selectNFTAddress = nftContractAddress //Retrieve address from locally deployed contract DELETE FOR RINKEBY
   // TEMP MUTE UNTIL RINKEBY const selectTokenId = jsonData.token_id; //Retrieve id
-  const selectTokenId = 1 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
+  const selectTokenId = 2 //UPDATE THIS FOR WHATEVER TESTNET NFT ID YOURE ON ----- DELETE FOR RINKEBY
 
   
   
@@ -558,20 +558,30 @@ const submitHandshakeNew = async () => {
 
 
 
-  // NOT FIXED YET
+// NOT FIXED YET - NEW ACCEPT HANDSHAKE FUNCTION ACTUALLY LIVES IN HANDSHAKE BUYER CARD
 // 3. NEW ACCEPT HANDSHAKE FUNCTION - This allows buyer to accept Handshake
 // It takes index of transaction and payment value as inputs 
 // These will be autofilled in MVP from reading contract subgraph 
-const acceptNew = async () => {
-  const result = tx(
-    writeContracts &&
-      writeContracts.BasicSale &&
-      writeContracts.BasicSale.buyInit(index, {value:payment}),
-    update => {
-      console.log("📡 Transaction Update:", update);
-    },
-  );
-  };
+// const acceptNew = async () => {
+//   //
+//   const setIndex = 0;
+  
+//   const selectPrice = ethers.BigNumber.from(JSON.parse(localStorage.getItem('dealPrice'))); //Retrieve Price
+//   console.log("selectPrice ", selectPrice); //LOG Price
+
+//   //Convert before sending to EVM
+//   const selectGweiPayment = ethers.utils.parseEther(selectPrice.toString()) // Convert to gwei;
+//   console.log("selectGweiPrice ", selectGweiPrice); //LOG gweiPrice
+  
+//   const result = tx(
+//     writeContracts &&
+//       writeContracts.BasicSale &&
+//       writeContracts.BasicSale.buyInit(setIndex, {value:payment}),
+//     update => {
+//       console.log("📡 Transaction Update:", update);
+//     },
+//   );
+//   };
 
 
   // NOT FIXED YET
@@ -789,7 +799,7 @@ const withdrawFunds = async () => {
               console.log("DEAL PRICE: ", dealPrice);
               console.log("TARGET: ",e.target.value);
             }}
-            placeholder="Set Price"
+            placeholder="Set Price in ETH"
           />
               <Button
                 disabled={moving}
@@ -923,7 +933,7 @@ const withdrawFunds = async () => {
               console.log("TARGET: ",e.target.value);
               
             }}
-            placeholder="Set Price"
+            placeholder="Set Price in ETH"
           />
           <Button
             style={{ marginTop: 8 }}
@@ -987,6 +997,10 @@ const withdrawFunds = async () => {
         <div style={{ width: 640, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
           <HCardBuyerList
           address={address}
+        
+          userSigner={userSigner} 
+          gasPrice={gasPrice}
+          writeContracts={writeContracts}
           />
           </div>
           </Route>

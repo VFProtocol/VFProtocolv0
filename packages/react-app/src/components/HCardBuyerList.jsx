@@ -109,6 +109,10 @@ if (apiState == "loaded") {
               <List.Item>
               <HandshakeCardBuyer 
                 data={item}
+                userSigner={props.userSigner} 
+                gasPrice={props.gasPrice}
+                writeContracts={props.writeContracts}
+        
               /> 
               </List.Item>
             

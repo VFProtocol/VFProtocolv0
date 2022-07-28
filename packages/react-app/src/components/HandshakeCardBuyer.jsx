@@ -1,6 +1,7 @@
 import React from "react";
 import { Badge, Button, Card, List, Typography } from "antd";
 // import { useEventListener } from "eth-hooks/events/useEventListener";
+import { Transactor, Web3ModalSetup } from "../helpers";
 import {
   ClockCircleOutlined, ConsoleSqlOutlined
 } from "@ant-design/icons";
@@ -28,6 +29,15 @@ export default function HandshakeCardBuyer(props) {
   const { Meta } = Card;
   const { ethers } = require("ethers");
   
+  // Import stuff for the Handshake Acceptance
+  // const tx() = props.tx();
+  console.log("props", props);
+  const tx = Transactor(props.userSigner, props.gasPrice);
+  console.log(props.userSigner, props.gasPrice);
+  console.log("tx", tx);
+  const writeContracts=props.writeContracts;
+  
+
   var labelId = "Pending";
   if (props.data.Status === "Pending") {
   labelId = "Awaiting Your Approval";
@@ -67,6 +77,53 @@ export default function HandshakeCardBuyer(props) {
   }
   /// End Time Remaining on Handshake -------------------------------------------------
   
+
+
+// NEW ACCEPT HANDSHAKE FUNCTION - This allows buyer to accept Handshake
+// It takes index of transaction and payment value as inputs 
+// These will be autofilled in MVP from reading contract subgraph 
+const acceptNew = async () => {
+  //
+  const setIndex = 1;
+  const sPrice = ethers.BigNumber.from("1000000000000000000");
+  const selectPrice = sPrice.toString();
+  // const selectPrice = ethers.BigNumber.from(JSON.parse(localStorage.getItem('dealPrice'))); //Retrieve Price  from JSON response
+
+  console.log("setIndex ", setIndex); //LOG Price
+  console.log("selectPrice ", selectPrice); //LOG Price
+  
+
+  //Convert before sending to EVM
+  // const selectGweiPayment = ethers.utils.parseEther(selectPrice.toString()) // Convert to gwei;
+  // console.log("selectGweiPrice ", selectGweiPrice); //LOG gweiPrice
+  
+  const result = tx(
+    writeContracts &&
+      writeContracts.BasicSale &&
+      writeContracts.BasicSale.buyInit(setIndex, {value:selectPrice}),
+    update => {
+      console.log("📡 Transaction Update:", update);
+    },
+  );
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     return (
         <>
         <Badge.Ribbon text={labelId} placement="start">
@@ -79,7 +136,9 @@ export default function HandshakeCardBuyer(props) {
             }
             actions={[
               <>
-            <Button type="primary" onClick={console.log("Click Accept")} style={{ background: "green", borderColor: "green"}}>Accept Handshake</Button>
+            <Button type="primary" onClick={()=>{
+              acceptNew();
+              console.log("Click Accept")}} style={{ background: "green", borderColor: "green"}}>Accept Handshake</Button>
             <Button onClick={console.log("Click Reject")}>Reject</Button>
               </>
             ]}
